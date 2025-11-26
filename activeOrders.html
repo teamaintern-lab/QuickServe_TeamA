@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Orders - QuickServe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- For icons -->
+    <link rel="stylesheet" href="styles.css"> <!-- Global styles -->
+    <style>
+        /* Page-specific CSS for Active Orders */
+        .search-bar {
+            margin: 2rem auto;
+            max-width: 400px;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-pending { background: #ffc107; color: #333; }
+        .status-accepted { background: #28a745; color: white; }
+        .action-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 0.25rem;
+            transition: background 0.3s;
+        }
+        .action-btn:hover { background: #0056b3; }
+        .no-results { text-align: center; color: #666; padding: 2rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-list"></i> Active Orders</h1>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            <a href="daily-report.html"><i class="fas fa-chart-line"></i> Daily Report</a>
+        </nav>
+    </header>
+    <main>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by customer or location...">
+            <button onclick="filterOrders()"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i> Customer</th>
+                    <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                    <th><i class="fas fa-wrench"></i> Service</th>
+                    <th><i class="fas fa-dollar-sign"></i> Cost</th>
+                    <th><i class="fas fa-info-circle"></i> Status</th>
+                    <th><i class="fas fa-cogs"></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dummy Data Rows with Predefined Costs -->
+                <tr data-customer="John Doe" data-location="Downtown">
+                    <td>John Doe</td>
+                    <td>Downtown</td>
+                    <td>Plumbing</td>
+                    <td>$50</td>
+                    <td><span class="status-badge status-pending">Pending</span></td>
+                    <td>
+                        <button class="action-btn" onclick="reschedule(this)">Reschedule</button>
+                    </td>
+                </tr>
+                <tr data-customer="Jane Smith" data-location="Uptown">
+                    <td>Jane Smith</td>
+                    <td>Uptown</td>
+                    <td>Carpentry</td>
+                    <td>$75</td>
+                    <td><span class="status-badge status-accepted">Accepted</span></td>
+                    <td>
+                        <button class="action-btn" onclick="reschedule(this)">Reschedule</button>
+                    </td>
+                </tr>
+                <tr data-customer="Mike Johnson" data-location="Suburb">
+                    <td>Mike Johnson</td>
+                    <td>Suburb</td>
+                    <td>Electrical</td>
+                    <td>$60</td>
+                    <td><span class="status-badge status-pending">Pending</span></td>
+                    <td>
+                        <button class="action-btn" onclick="reschedule(this)">Reschedule</button>
+                    </td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+        <div id="noResults" class="no-results" style="display: none;">No matching orders found.</div>
+    </main>
+    <footer>
+        <p>&copy; 2023 QuickServe. All rights reserved.</p>
+    </footer>
+    <script src="js/app.js"></script> <!-- Global JS -->
+    <script>
+        // Page-specific JS for Active Orders
+        // Modal for actions
+        function showModal(title, content, callback) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>${title}</h3>
+                    ${content}
+                    <button onclick="this.parentElement.parentElement.remove()">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+            if (callback) callback(modal);
+        }
+
+        // Reschedule Action (Only remaining action)
+        function reschedule(button) {
+            const row = button.closest('tr');
+            const customer = row.cells[0].textContent;
+            showModal('Reschedule', `
+                <p>For ${customer}:</p>
+                <input type="date" id="dateInput">
+                <button onclick="confirmReschedule('${customer}')">Confirm</button>
+            `);
+        }
+
+        function confirmReschedule(customer) {
+            const date = document.getElementById('dateInput').value;
+            if (date) {
+                showModal('Success', `Rescheduled to ${date} for ${customer}.`);
+                // Update dummy data or send to backend
+            } else {
+                showModal('Error', 'Please select a date.');
+            }
+        }
+
+        // Filter/Search Functionality
+        function filterOrders() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#ordersTable tbody tr');
+            let visibleCount = 0;
+            rows.forEach(row => {
+                const customer = row.getAttribute('data-customer').toLowerCase();
+                const location = row.getAttribute('data-location').toLowerCase();
+                if (customer.includes(query) || location.includes(query)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        // Auto-filter on input
+        document.getElementById('searchInput').addEventListener('input', filterOrders);
+    </script>
+</body>
+</html>
