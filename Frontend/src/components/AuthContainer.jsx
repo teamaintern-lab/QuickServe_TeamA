@@ -3,19 +3,17 @@ import Login from './Login';
 import Register from './Register';
 import '../styles/Auth.css';
 
-export default function AuthContainer() {
+export default function AuthContainer({ onAuthenticated }) {
   const [isLogin, setIsLogin] = useState(true);
   const [users, setUsers] = useState([]);
 
   const handleRegister = (userData) => {
-    // Check if user already exists
     const userExists = users.some(u => u.email === userData.email);
     if (userExists) {
       alert('Email already registered!');
       return false;
     }
-    // Add new user
-    setUsers([...users, userData]);
+    setUsers(prev => [...prev, userData]);
     alert('Registration successful! Please login.');
     setIsLogin(true);
     return true;
@@ -26,11 +24,13 @@ export default function AuthContainer() {
     if (user) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       alert(`Welcome back, ${user.username}!`);
+      if (onAuthenticated) {
+        onAuthenticated(user);
+      }
       return true;
-    } else {
-      alert('Invalid email or password!');
-      return false;
     }
+    alert('Invalid email or password!');
+    return false;
   };
 
   return (
