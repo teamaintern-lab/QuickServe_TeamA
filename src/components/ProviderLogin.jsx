@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/Auth.css';
 
-export default function Login({ onLogin }) {
+export default function ProviderLogin({ onLogin, onBack }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,23 +19,28 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!formData.email || !formData.password) {
       alert('Please fill in all fields!');
       return;
     }
 
-    const success = onLogin(formData.email, formData.password);
+    const success = onLogin(formData.email, formData.password, 'provider');
     if (success) {
       setFormData({ email: '', password: '' });
     }
   };
 
   return (
-    <div className="auth-form-container">
+    <div className="auth-form-container provider-login">
+      <button className="back-btn" onClick={onBack}>
+        ← Back
+      </button>
+
       <div className="auth-header">
-        <h1 className="auth-title">Login</h1>
-        <p className="auth-subtitle">Login to your account</p>
+        <div className="login-icon-large">🏢</div>
+        <h1 className="auth-title provider-title">Service Provider Login</h1>
+        <p className="auth-subtitle">Manage your services and bookings</p>
       </div>
 
       <form onSubmit={handleSubmit} className="auth-form">
@@ -82,8 +87,8 @@ export default function Login({ onLogin }) {
           </div>
         </div>
 
-        <button type="submit" className="submit-btn login-btn">
-          Sign In
+        <button type="submit" className="submit-btn provider-btn">
+          Sign In as Provider
         </button>
       </form>
 

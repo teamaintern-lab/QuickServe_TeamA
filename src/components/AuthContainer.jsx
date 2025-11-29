@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import Login from './Login';
+import RoleSelector from './RoleSelector';
 import Register from './Register';
+import CustomerLogin from './CustomerLogin';
+import ProviderLogin from './ProviderLogin';
 import '../styles/Auth.css';
 
 export default function AuthContainer() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [screen, setScreen] = useState('roleSelector'); // 'roleSelector', 'customerLogin', 'providerLogin', 'register'
   const [users, setUsers] = useState([]);
 
   const handleRegister = (userData) => {
@@ -16,14 +18,18 @@ export default function AuthContainer() {
     }
     // Add new user
     setUsers([...users, userData]);
-    alert('Registration successful! Please login.');
-    setIsLogin(true);
+    alert('Registration successful! Please login with your role.');
+    setScreen('roleSelector');
     return true;
   };
 
-  const handleLogin = (email, password) => {
+  const handleLogin = (email, password, role) => {
     const user = users.find(u => u.email === email && u.password === password);
     if (user) {
+      if (user.role !== role) {
+        alert(`This account is registered as a ${user.role}. Please use the correct login.`);
+        return false;
+      }
       localStorage.setItem('currentUser', JSON.stringify(user));
       alert(`Welcome back, ${user.username}!`);
       return true;
@@ -33,30 +39,43 @@ export default function AuthContainer() {
     }
   };
 
+  const handleSelectRole = (role) => {
+    if (role === 'customer') {
+      setScreen('customerLogin');
+    } else if (role === 'provider') {
+      setScreen('providerLogin');
+    }
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-wrapper">
-        {isLogin ? (
-          <>
-            <Login onLogin={handleLogin} />
-            <p className="toggle-text">
-              Don't have an account?{' '}
-              <button
-                className="toggle-btn"
-                onClick={() => setIsLogin(false)}
-              >
-                Register here
-              </button>
-            </p>
-          </>
-        ) : (
+        {screen === 'roleSelector' && (
+          <RoleSelector
+            onSelectRole={handleSelectRole}
+            onRegister={() => setScreen('register')}
+          />
+        )}
+        {screen === 'customerLogin' && (
+          <CustomerLogin
+            onLogin={handleLogin}
+            onBack={() => setScreen('roleSelector')}
+          />
+        )}
+        {screen === 'providerLogin' && (
+          <ProviderLogin
+            onLogin={handleLogin}
+            onBack={() => setScreen('roleSelector')}
+          />
+        )}
+        {screen === 'register' && (
           <>
             <Register onRegister={handleRegister} />
             <p className="toggle-text">
               Already have an account?{' '}
               <button
                 className="toggle-btn"
-                onClick={() => setIsLogin(true)}
+                onClick={() => setScreen('roleSelector')}
               >
                 Login here
               </button>
