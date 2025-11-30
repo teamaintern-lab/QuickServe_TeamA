@@ -89,26 +89,25 @@ export default function Dashboard({ user, onLogout }) {
   }, []);
 
   const summary = useMemo(() => {
-    const pending = requests.filter(r => r.status === 'pending').length;
-    const accepted = requests.filter(r => r.status === 'accepted').length;
-    const declined = requests.filter(r => r.status === 'declined').length;
+    const pending = requests.filter((r) => r.status === 'pending').length;
+    const accepted = requests.filter((r) => r.status === 'accepted').length;
+    const declined = requests.filter((r) => r.status === 'declined').length;
     return { pending, accepted, declined, total: requests.length };
   }, [requests]);
 
   const filteredRequests = useMemo(() => {
-    return requests.filter(req => {
+    return requests.filter((req) => {
       const matchesStatus =
         statusFilter === 'all' ? true : req.status === statusFilter;
-      const matchesSearch = req.customerName
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
+      const matchesSearch =
+        req.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         req.serviceType.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesStatus && matchesSearch;
     });
   }, [requests, statusFilter, searchQuery]);
 
   const pushNotification = (message) => {
-    setNotifications(prev => {
+    setNotifications((prev) => {
       const next = [
         {
           id: generateId(),
@@ -122,19 +121,19 @@ export default function Dashboard({ user, onLogout }) {
   };
 
   const handleAction = (requestId, action) => {
-    setRequests(prev =>
-      prev.map(req =>
+    setRequests((prev) =>
+      prev.map((req) =>
         req.id === requestId
           ? {
               ...req,
               status: action,
               lastUpdated: new Date().toISOString(),
             }
-          : req,
-      ),
+          : req
+      )
     );
     pushNotification(
-      `You ${action === 'accepted' ? 'accepted' : 'declined'} ${requestId}`,
+      `You ${action === 'accepted' ? 'accepted' : 'declined'} ${requestId}`
     );
   };
 
@@ -153,9 +152,7 @@ export default function Dashboard({ user, onLogout }) {
       <header className="dashboard-header">
         <div>
           <p className="welcome-text">Welcome back</p>
-          <h1 className="dashboard-title">
-            {user?.username || 'Service Provider'}
-          </h1>
+          <h1 className="dashboard-title">{user?.username || 'Service Provider'}</h1>
         </div>
         <div className="header-actions">
           <button className="notification-btn">
@@ -201,7 +198,7 @@ export default function Dashboard({ user, onLogout }) {
             {notifications.length === 0 ? (
               <li>No new alerts</li>
             ) : (
-              notifications.map(note => (
+              notifications.map((note) => (
                 <li key={note.id}>
                   <span>{note.message}</span>
                   <time>{formatTimeAgo(note.timestamp)}</time>
@@ -214,12 +211,10 @@ export default function Dashboard({ user, onLogout }) {
 
       <section className="controls-bar">
         <div className="filters">
-          {['pending', 'accepted', 'declined', 'all'].map(status => (
+          {['pending', 'accepted', 'declined', 'all'].map((status) => (
             <button
               key={status}
-              className={`filter-btn ${
-                statusFilter === status ? 'active' : ''
-              }`}
+              className={`filter-btn ${statusFilter === status ? 'active' : ''}`}
               onClick={() => setStatusFilter(status)}
             >
               {status === 'all'
@@ -233,7 +228,7 @@ export default function Dashboard({ user, onLogout }) {
           className="search-input"
           placeholder="Search by customer or service..."
           value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </section>
 
@@ -252,7 +247,7 @@ export default function Dashboard({ user, onLogout }) {
           </div>
         ) : (
           <div className="requests-grid">
-            {filteredRequests.map(request => (
+            {filteredRequests.map((request) => (
               <article className="request-card" key={request.id}>
                 <header>
                   <div>
@@ -294,4 +289,3 @@ export default function Dashboard({ user, onLogout }) {
     </div>
   );
 }
-

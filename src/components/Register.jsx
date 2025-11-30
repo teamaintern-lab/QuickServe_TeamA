@@ -8,6 +8,8 @@ export default function Register({ onRegister }) {
     password: '',
     confirmPassword: '',
     role: 'customer',
+    category: '',
+    customService: '',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -53,6 +55,14 @@ export default function Register({ onRegister }) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
+    if (formData.role === 'provider' && !formData.category.trim()) {
+      newErrors.category = 'Please select a service category';
+    }
+
+    if (formData.role === 'provider' && formData.category === 'other' && !formData.customService.trim()) {
+      newErrors.customService = 'Please describe your service';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -71,6 +81,13 @@ export default function Register({ onRegister }) {
       role: formData.role,
     };
 
+    if (formData.role === 'provider') {
+      userData.category = formData.category;
+      if (formData.category === 'other') {
+        userData.customService = formData.customService;
+      }
+    }
+
     const success = onRegister(userData);
     if (success) {
       setFormData({
@@ -79,6 +96,8 @@ export default function Register({ onRegister }) {
         password: '',
         confirmPassword: '',
         role: 'customer',
+        category: '',
+        customService: '',
       });
     }
   };
@@ -197,6 +216,59 @@ export default function Register({ onRegister }) {
             <option value="provider">Service Provider</option>
           </select>
         </div>
+
+        {formData.role === 'provider' && (
+          <div className="form-group">
+            <label htmlFor="category" className="form-label">
+              Type of Service
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={`form-select ${errors.category ? 'input-error' : ''}`}
+            >
+              <option value="">-- Select a service category --</option>
+              <option value="electrical">Electrical Services</option>
+              <option value="plumbing">Plumbing Services</option>
+              <option value="cleaning">Cleaning Services</option>
+              <option value="carpentry">Carpentry Services</option>
+              <option value="painting">Painting Services</option>
+              <option value="ac-maintenance">AC Maintenance & Repair</option>
+              <option value="appliance-repair">Appliance Repair</option>
+              <option value="pest-control">Pest Control</option>
+              <option value="landscaping">Landscaping & Gardening</option>
+              <option value="other">Other Services</option>
+            </select>
+            {errors.category && (
+              <span className="error-message">{errors.category}</span>
+            )}
+          </div>
+        )}
+
+        {formData.role === 'provider' && formData.category === 'other' && (
+          <div className="form-group">
+            <label htmlFor="customService" className="form-label">
+              Describe Your Service
+            </label>
+            <div className="input-wrapper">
+              <span className="input-icon">💼</span>
+              <input
+                type="text"
+                id="customService"
+                name="customService"
+                value={formData.customService}
+                onChange={handleChange}
+                placeholder="e.g., Home Renovation, Pet Sitting, Tutoring..."
+                className={`form-input ${errors.customService ? 'input-error' : ''}`}
+              />
+            </div>
+            {errors.customService && (
+              <span className="error-message">{errors.customService}</span>
+            )}
+          </div>
+        )}
 
         <button type="submit" className="submit-btn register-btn">
           Create Account
