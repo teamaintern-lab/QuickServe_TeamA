@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: reclick-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ReClick
+    username: postgres
+    password: Srianha
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none   # since Flyway will handle schema creation
+    show-sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true  # lets Flyway run even if DB isn't empty
+
+server:
+  port: 8080
