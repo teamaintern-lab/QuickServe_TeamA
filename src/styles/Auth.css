@@ -1,7 +1,7 @@
-/* Auth Container Styles */
+/* Auth Container Styles - White Shade Theme */
 .auth-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #5f5d76 0%, #24107b 25%, #272745 50%, #282043 75%, #16213e 100%);
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8f0 25%, #f0f0f8 50%, #efefff 75%, #f8f8ff 100%);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
   display: flex;
@@ -28,9 +28,9 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  background: rgba(184, 168, 255, 0.1);
-  border: 1px solid rgba(184, 168, 255, 0.3);
-  color: #b8a8ff;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  color: #667eea;
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -41,8 +41,8 @@
 }
 
 .back-to-home-btn:hover {
-  background: rgba(184, 168, 255, 0.2);
-  border-color: rgba(184, 168, 255, 0.6);
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.6);
   transform: translateX(-2px);
 }
 
@@ -53,12 +53,12 @@
 
 /* Auth Form Container */
 .auth-form-container {
-  background: rgb(6, 6, 108);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
   padding: 40px 30px;
-  box-shadow: 0 20px 60px rgba(88, 56, 110, 0.5), 0 0 40px rgb(161, 120, 255);
+  box-shadow: 0 20px 60px rgba(180, 180, 200, 0.15), 0 0 40px rgba(200, 200, 230, 0.2);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(56, 41, 85, 0.283);
+  border: 1px solid rgba(220, 220, 240, 0.5);
   animation: slideUp 0.5s ease-out;
 }
 
@@ -82,9 +82,9 @@
 .auth-title {
   font-size: 28px;
   font-weight: 700;
-  color: #812e94;
+  color: #333;
   margin: 0 0 8px 0;
-  background: linear-gradient(135deg, #ffa8d1 0%, #ffa5e4 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -92,7 +92,7 @@
 
 .auth-subtitle {
   font-size: 14px;
-  color: #7676c4;
+  color: #666;
   margin: 0;
 }
 
@@ -113,7 +113,7 @@
 .form-label {
   font-size: 13px;
   font-weight: 600;
-  color: #b8a8ff;
+  color: #333;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -123,17 +123,17 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(85, 51, 111, 0.5);
+  background: rgba(245, 245, 250, 0.7);
   border-radius: 12px;
-  border: 2px solid rgba(160, 120, 255, 0.3);
+  border: 2px solid rgba(150, 150, 200, 0.3);
   transition: all 0.3s ease;
   overflow: hidden;
 }
 
 .input-wrapper:focus-within {
-  border-color: #b8a8ff;
-  background: rgba(50, 50, 85, 0.7);
-  box-shadow: 0 0 0 3px rgba(184, 168, 255, 0.2);
+  border-color: #667eea;
+  background: rgba(240, 240, 250, 0.9);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .input-icon {
@@ -149,13 +149,13 @@
   background: transparent;
   padding: 12px 8px;
   font-size: 14px;
-  color: #e0e0ff;
+  color: #333;
   outline: none;
   font-family: inherit;
 }
 
 .form-input::placeholder {
-  color: #7777aa;
+  color: #aaa;
 }
 
 .form-input.input-error {
@@ -166,15 +166,15 @@
 .form-select {
   padding: 12px 15px;
   font-size: 14px;
-  border: 2px solid rgba(160, 120, 255, 0.3);
+  border: 2px solid rgba(150, 150, 200, 0.3);
   border-radius: 12px;
-  background: rgba(40, 40, 70, 0.5);
-  color: #e0e0ff;
+  background: rgba(245, 245, 250, 0.7);
+  color: #333;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b8a8ff' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 20px;
@@ -183,17 +183,17 @@
 
 .form-select:focus {
   outline: none;
-  border-color: #b8a8ff;
-  background-color: rgba(50, 50, 85, 0.7);
+  border-color: #667eea;
+  background-color: rgba(240, 240, 250, 0.9);
 }
 
 .form-select:hover {
-  border-color: #b8a8ff;
+  border-color: #667eea;
 }
 
 .form-select option {
-  background-color: #1a1a2e;
-  color: #e0e0ff;
+  background-color: #f5f5f5;
+  color: #333;
 }
 
 /* Toggle Password Button */
@@ -203,19 +203,19 @@
   padding: 8px 12px;
   cursor: pointer;
   font-size: 18px;
-  color: #7777aa;
+  color: #999;
   transition: all 0.2s ease;
 }
 
 .toggle-password:hover {
-  color: #b8a8ff;
+  color: #667eea;
   transform: scale(1.1);
 }
 
 /* Error Message */
 .error-message {
   font-size: 12px;
-  color: #ff9999;
+  color: #d9534f;
   font-weight: 500;
   margin-top: -4px;
 }
@@ -236,14 +236,14 @@
 }
 
 .login-btn {
-  background: linear-gradient(135deg, #8b7cff 0%, #b8a8ff 100%);
-  color: #1a1a2e;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
   font-weight: 600;
 }
 
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(184, 168, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .login-btn:active {
@@ -251,14 +251,14 @@
 }
 
 .register-btn {
-  background: linear-gradient(135deg, #9b88ff 0%, #c8b6ff 100%);
-  color: #1a1a2e;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
   font-weight: 600;
 }
 
 .register-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(200, 182, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .register-btn:active {
@@ -273,7 +273,7 @@
 
 .footer-text {
   font-size: 12px;
-  color: #7777aa;
+  color: #666;
   margin: 0;
 }
 
@@ -282,13 +282,13 @@
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
-  color: #9999bb;
+  color: #777;
 }
 
 .toggle-btn {
   background: none;
   border: none;
-  color: #b8a8ff;
+  color: #667eea;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
@@ -297,14 +297,14 @@
 }
 
 .toggle-btn:hover {
-  color: #d4a5ff;
+  color: #764ba2;
   text-decoration: underline;
 }
 
 /* Role Selector Styles */
 .role-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f0c29 0%, #302b63 25%, #24243e 50%, #1a1a2e 75%, #16213e 100%);
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8f0 25%, #f0f0f8 50%, #efefff 75%, #f8f8ff 100%);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
   display: flex;
@@ -328,9 +328,9 @@
 .role-title {
   font-size: 36px;
   font-weight: 700;
-  color: #c8b6ff;
+  color: #333;
   margin: 0 0 12px 0;
-  background: linear-gradient(135deg, #b8a8ff 0%, #d4a5ff 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -338,7 +338,7 @@
 
 .role-subtitle {
   font-size: 16px;
-  color: #9999bb;
+  color: #666;
   margin: 0;
 }
 
@@ -351,19 +351,19 @@
 }
 
 .role-card {
-  background: rgba(20, 20, 40, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   border-radius: 16px;
   padding: 40px 30px;
   text-align: center;
-  border: 2px solid rgba(160, 120, 255, 0.3);
+  border: 2px solid rgba(150, 150, 200, 0.3);
   transition: all 0.3s ease;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(180, 180, 200, 0.1);
 }
 
 .role-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(184, 168, 255, 0.6);
-  box-shadow: 0 15px 50px rgba(184, 168, 255, 0.2);
+  border-color: rgba(102, 126, 234, 0.6);
+  box-shadow: 0 15px 50px rgba(102, 126, 234, 0.15);
 }
 
 .role-icon {
@@ -374,13 +374,13 @@
 .role-card-title {
   font-size: 22px;
   font-weight: 700;
-  color: #e0e0ff;
+  color: #333;
   margin: 0 0 10px 0;
 }
 
 .role-card-desc {
   font-size: 14px;
-  color: #9999bb;
+  color: #666;
   margin: 0 0 24px 0;
   line-height: 1.5;
 }
@@ -430,13 +430,13 @@
 
 .role-footer-text {
   font-size: 14px;
-  color: #9999bb;
+  color: #666;
 }
 
 .register-link {
   background: none;
   border: none;
-  color: #b8a8ff;
+  color: #667eea;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
@@ -446,7 +446,7 @@
 }
 
 .register-link:hover {
-  color: #d4a5ff;
+  color: #764ba2;
   text-decoration: underline;
 }
 
@@ -455,9 +455,9 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  background: rgba(184, 168, 255, 0.1);
-  border: 1px solid rgba(184, 168, 255, 0.3);
-  color: #b8a8ff;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  color: #667eea;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -467,8 +467,8 @@
 }
 
 .back-btn:hover {
-  background: rgba(184, 168, 255, 0.2);
-  border-color: rgba(184, 168, 255, 0.6);
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.6);
 }
 
 .auth-form-container {
