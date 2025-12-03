@@ -34,7 +34,10 @@ export default function AuthContainer({ onBackToHome, onLoginSuccess }) {
     // successful login: persist and show welcome message
     localStorage.setItem('currentUser', JSON.stringify(user));
     alert(`Welcome back, ${user.username}!`);
-    if (onLoginSuccess) onLoginSuccess(user);
+    // Call the callback after a brief delay to allow alert to be seen
+    if (onLoginSuccess) {
+      setTimeout(() => onLoginSuccess(user), 500);
+    }
     return true;
   };
 

@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import BookingForm from './BookingForm';
 import '../styles/Dashboard.css';
 
 export default function CustomerDashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('bookings');
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [notification, setNotification] = useState(null);
   const [bookings, setBookings] = useState([
     {
       id: 'BK-001',
@@ -51,6 +54,27 @@ export default function CustomerDashboard({ user, onLogout }) {
     },
   ]);
 
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  const handleBookingSubmit = (formData) => {
+    const newBooking = {
+      id: `BK-${String(bookings.length + 1).padStart(3, '0')}`,
+      service: formData.serviceType,
+      provider: 'Pending Assignment',
+      date: formData.date,
+      time: formData.time,
+      amount: Math.floor(Math.random() * 2000) + 300,
+      status: 'pending',
+      rating: 0,
+    };
+    setBookings([newBooking, ...bookings]);
+    setShowBookingForm(false);
+    showNotification('✓ Booking request submitted successfully! Providers will respond soon.', 'success');
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'confirmed':
@@ -70,6 +94,13 @@ export default function CustomerDashboard({ user, onLogout }) {
 
   return (
     <div className="dashboard-container">
+      {/* Notification */}
+      {notification && (
+        <div className={`notification notification-${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+
       {/* Sidebar */}
       <div className="dashboard-sidebar">
         <div className="sidebar-header">
@@ -129,9 +160,7 @@ export default function CustomerDashboard({ user, onLogout }) {
               <span className="stat-label">Total Bookings</span>
             </div>
             <div className="stat-card">
-              <span className="stat-value">
-                ${bookings.reduce((sum, b) => sum + b.amount, 0)}
-              </span>
+              <span className="stat-value">₹{bookings.reduce((sum, b) => sum + b.amount, 0)}</span>
               <span className="stat-label">Total Spent</span>
             </div>
           </div>
@@ -140,65 +169,93 @@ export default function CustomerDashboard({ user, onLogout }) {
         {/* Bookings Tab */}
         {activeTab === 'bookings' && (
           <div className="tab-content">
-            <div className="bookings-grid">
-              {bookings.map((booking) => (
-                <div key={booking.id} className="booking-card">
-                  <div className="booking-header">
-                    <h3 className="booking-service">{booking.service}</h3>
-                    <span
-                      className="booking-status"
-                      style={{ backgroundColor: getStatusColor(booking.status) }}
-                    >
-                      {getStatusLabel(booking.status)}
-                    </span>
-                  </div>
-                  <div className="booking-details">
-                    <p className="detail-item">
-                      <span className="detail-icon">🏢</span>
-                      <span>{booking.provider}</span>
-                    </p>
-                    <p className="detail-item">
-                      <span className="detail-icon">📅</span>
-                      <span>{booking.date} at {booking.time}</span>
-                    </p>
-                    <p className="detail-item">
-                      <span className="detail-icon">💰</span>
-                      <span>₹{booking.amount}</span>
-                    </p>
-                  </div>
-                  <div className="booking-actions">
-                    <button className="action-btn primary">View Details</button>
-                    {booking.status === 'completed' && booking.rating === 0 && (
-                      <button className="action-btn">Rate Service</button>
-                    )}
-                  </div>
-                </div>
-              ))}
+            <div className="bookings-header">
+              <h2 className="section-title">Current Bookings</h2>
+              <button
+                className="action-btn primary"
+                onClick={() => setShowBookingForm(true)}
+              >
+                + New Booking
+              </button>
             </div>
+            
+            {bookings.filter(b => b.status !== 'completed').length === 0 ? (
+              <div className="empty-state">
+                <p>No active bookings. Ready to book a service?</p>
+                <button
+                  className="action-btn primary"
+                  onClick={() => setShowBookingForm(true)}
+                >
+                  Book Now
+                </button>
+              </div>
+            ) : (
+              <div className="bookings-grid">
+                {bookings.filter(b => b.status !== 'completed').map((booking) => (
+                  <div key={booking.id} className="booking-card">
+                    <div className="booking-header">
+                      <h3 className="booking-service">{booking.service}</h3>
+                      <span
+                        className="booking-status"
+                        style={{ backgroundColor: getStatusColor(booking.status) }}
+                      >
+                        {getStatusLabel(booking.status)}
+                      </span>
+                    </div>
+                    <div className="booking-details">
+                      <p className="detail-item">
+                        <span className="detail-icon">🏢</span>
+                        <span>{booking.provider}</span>
+                      </p>
+                      <p className="detail-item">
+                        <span className="detail-icon">📅</span>
+                        <span>{booking.date} at {booking.time}</span>
+                      </p>
+                      <p className="detail-item">
+                        <span className="detail-icon">💰</span>
+                        <span>₹{booking.amount}</span>
+                      </p>
+                    </div>
+                    <div className="booking-actions">
+                      <button className="action-btn primary">View Details</button>
+                      {booking.status === 'pending' && (
+                        <button className="action-btn danger">Cancel</button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
         {/* History Tab */}
         {activeTab === 'history' && (
           <div className="tab-content">
-            <div className="history-list">
-              {bookings.filter((b) => b.status === 'completed').map((booking) => (
-                <div key={booking.id} className="history-item">
-                  <div className="history-info">
-                    <h3>{booking.service}</h3>
-                    <p>{booking.provider}</p>
-                    <p className="history-date">{booking.date}</p>
-                  </div>
-                  <div className="history-meta">
-                    <div className="rating">
-                      {'⭐'.repeat(booking.rating)}{' '}
-                      {booking.rating > 0 && <span>({booking.rating}/5)</span>}
+            {bookings.filter(b => b.status === 'completed').length === 0 ? (
+              <div className="empty-state">
+                <p>No completed services yet</p>
+              </div>
+            ) : (
+              <div className="history-list">
+                {bookings.filter((b) => b.status === 'completed').map((booking) => (
+                  <div key={booking.id} className="history-item">
+                    <div className="history-info">
+                      <h3>{booking.service}</h3>
+                      <p>{booking.provider}</p>
+                      <p className="history-date">{booking.date}</p>
                     </div>
-                    <p className="history-amount">₹{booking.amount}</p>
+                    <div className="history-meta">
+                      <div className="rating">
+                        {'⭐'.repeat(booking.rating)}{' '}
+                        {booking.rating > 0 && <span>({booking.rating}/5)</span>}
+                      </div>
+                      <p className="history-amount">₹{booking.amount}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -216,6 +273,12 @@ export default function CustomerDashboard({ user, onLogout }) {
                 <div className="favorite-header">🔧 John Electricals</div>
                 <p className="favorite-type">Electrical Repair</p>
                 <div className="rating-full">⭐⭐⭐⭐ (4.5)</div>
+                <button className="action-btn primary">Book Now</button>
+              </div>
+              <div className="favorite-card">
+                <div className="favorite-header">🚰 Quick Plumbers</div>
+                <p className="favorite-type">Plumbing Services</p>
+                <div className="rating-full">⭐⭐⭐⭐⭐ (4.9)</div>
                 <button className="action-btn primary">Book Now</button>
               </div>
             </div>
@@ -249,6 +312,14 @@ export default function CustomerDashboard({ user, onLogout }) {
           </div>
         )}
       </div>
+
+      {/* Booking Form Modal */}
+      {showBookingForm && (
+        <BookingForm
+          onClose={() => setShowBookingForm(false)}
+          onSubmit={handleBookingSubmit}
+        />
+      )}
     </div>
   );
 }
