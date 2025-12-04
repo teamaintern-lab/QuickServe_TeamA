@@ -1,31 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import Home from './components/Home'
 import AuthContainer from './components/AuthContainer'
-import Dashboard from './components/Dashboard'
+import CustomerDashboard from './components/CustomerDashboard'
+import ProviderDashboard from './components/ProviderDashboard'
 import './App.css'
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('home') // 'home', 'auth', 'customer-dashboard', 'provider-dashboard'
   const [currentUser, setCurrentUser] = useState(null)
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser')
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser))
-    }
-  }, [])
-
-  const handleAuthenticated = (user) => {
+  const handleLoginSuccess = (user) => {
     setCurrentUser(user)
+    if (user.role === 'customer') {
+      setCurrentPage('customer-dashboard')
+    } else if (user.role === 'provider') {
+      setCurrentPage('provider-dashboard')
+    }
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('currentUser')
     setCurrentUser(null)
+    localStorage.removeItem('currentUser')
+    setCurrentPage('home')
   }
 
-  return currentUser ? (
-    <Dashboard user={currentUser} onLogout={handleLogout} />
-  ) : (
-    <AuthContainer onAuthenticated={handleAuthenticated} />
+  return (
+    <>
+      {currentPage === 'home' ? (
+        <Home onLogin={() => setCurrentPage('auth')} />
+      ) : currentPage === 'auth' ? (
+        <AuthContainer onBackToHome={() => setCurrentPage('home')} onLoginSuccess={handleLoginSuccess} />
+      ) : currentPage === 'customer-dashboard' && currentUser ? (
+        <CustomerDashboard user={currentUser} onLogout={handleLogout} />
+      ) : currentPage === 'provider-dashboard' && currentUser ? (
+        <ProviderDashboard user={currentUser} onLogout={handleLogout} />
+      ) : null}
+    </>
   )
 }
 

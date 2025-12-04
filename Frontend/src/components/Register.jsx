@@ -8,6 +8,10 @@ export default function Register({ onRegister }) {
     password: '',
     confirmPassword: '',
     role: 'customer',
+    category: '',
+    customService: '',
+    experience: '',
+    phone: '',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -53,6 +57,27 @@ export default function Register({ onRegister }) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
+    if (formData.role === 'provider' && !formData.category.trim()) {
+      newErrors.category = 'Please select a service category';
+    }
+
+    if (formData.role === 'provider' && formData.category === 'other' && !formData.customService.trim()) {
+      newErrors.customService = 'Please describe your service';
+    }
+
+    // Provider-specific: experience required, phone optional
+    if (formData.role === 'provider') {
+      if (!String(formData.experience).trim()) {
+        newErrors.experience = 'Please enter years of experience';
+      } else if (!/^\d+$/.test(String(formData.experience)) || parseInt(formData.experience, 10) < 0) {
+        newErrors.experience = 'Enter a valid number of years';
+      }
+
+      if (formData.phone && !/^\+?\d{7,15}$/.test(formData.phone)) {
+        newErrors.phone = 'Enter a valid phone number (7-15 digits)';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -71,6 +96,15 @@ export default function Register({ onRegister }) {
       role: formData.role,
     };
 
+    if (formData.role === 'provider') {
+      userData.category = formData.category;
+      userData.experience = formData.experience;
+      userData.phone = formData.phone || '';
+      if (formData.category === 'other') {
+        userData.customService = formData.customService;
+      }
+    }
+
     const success = onRegister(userData);
     if (success) {
       setFormData({
@@ -79,6 +113,10 @@ export default function Register({ onRegister }) {
         password: '',
         confirmPassword: '',
         role: 'customer',
+        category: '',
+        customService: '',
+        experience: '',
+        phone: '',
       });
     }
   };
@@ -197,6 +235,105 @@ export default function Register({ onRegister }) {
             <option value="provider">Service Provider</option>
           </select>
         </div>
+
+        {formData.role === 'provider' && (
+          <div className="form-group">
+            <label htmlFor="category" className="form-label">
+              Type of Service
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={`form-select ${errors.category ? 'input-error' : ''}`}
+            >
+              <option value="">-- Select a service category --</option>
+              <option value="electrical">Electrical Services</option>
+              <option value="plumbing">Plumbing Services</option>
+              <option value="cleaning">Cleaning Services</option>
+              <option value="carpentry">Carpentry Services</option>
+              <option value="painting">Painting Services</option>
+              <option value="ac-maintenance">AC Maintenance & Repair</option>
+              <option value="appliance-repair">Appliance Repair</option>
+              <option value="pest-control">Pest Control</option>
+              <option value="landscaping">Landscaping & Gardening</option>
+              <option value="other">Other Services</option>
+            </select>
+            {errors.category && (
+              <span className="error-message">{errors.category}</span>
+            )}
+          </div>
+        )}
+
+        {formData.role === 'provider' && (
+          <div className="form-group">
+            <label htmlFor="experience" className="form-label">
+              Years of Experience
+            </label>
+            <div className="input-wrapper">
+              <span className="input-icon">📈</span>
+              <input
+                type="text"
+                id="experience"
+                name="experience"
+                value={formData.experience}
+                onChange={handleChange}
+                placeholder="e.g., 3"
+                className={`form-input ${errors.experience ? 'input-error' : ''}`}
+              />
+            </div>
+            {errors.experience && (
+              <span className="error-message">{errors.experience}</span>
+            )}
+          </div>
+        )}
+
+        {formData.role === 'provider' && (
+          <div className="form-group">
+            <label htmlFor="phone" className="form-label">
+              Phone Number (optional)
+            </label>
+            <div className="input-wrapper">
+              <span className="input-icon">📞</span>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="e.g., +919876543210"
+                className={`form-input ${errors.phone ? 'input-error' : ''}`}
+              />
+            </div>
+            {errors.phone && (
+              <span className="error-message">{errors.phone}</span>
+            )}
+          </div>
+        )}
+
+        {formData.role === 'provider' && formData.category === 'other' && (
+          <div className="form-group">
+            <label htmlFor="customService" className="form-label">
+              Describe Your Service
+            </label>
+            <div className="input-wrapper">
+              <span className="input-icon">💼</span>
+              <input
+                type="text"
+                id="customService"
+                name="customService"
+                value={formData.customService}
+                onChange={handleChange}
+                placeholder="e.g., Home Renovation, Pet Sitting, Tutoring..."
+                className={`form-input ${errors.customService ? 'input-error' : ''}`}
+              />
+            </div>
+            {errors.customService && (
+              <span className="error-message">{errors.customService}</span>
+            )}
+          </div>
+        )}
 
         <button type="submit" className="submit-btn register-btn">
           Create Account

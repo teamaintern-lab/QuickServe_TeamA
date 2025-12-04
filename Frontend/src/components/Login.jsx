@@ -34,7 +34,7 @@ export default function Login({ onLogin }) {
   return (
     <div className="auth-form-container">
       <div className="auth-header">
-        <h1 className="auth-title">Welcome Back</h1>
+        <h1 className="auth-title">Login</h1>
         <p className="auth-subtitle">Login to your account</p>
       </div>
 
