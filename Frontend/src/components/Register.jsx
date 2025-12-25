@@ -89,7 +89,7 @@ const handleGenerateOtp = async () => {
 
   try {
     setSendingOtp(true);
-    await generateOtp(formData.email);
+    await generateOtp({ email: formData.email });
     setOtpSent(true);
     startCooldown();
     alert("OTP sent to your email");

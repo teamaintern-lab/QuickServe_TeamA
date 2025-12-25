@@ -16,8 +16,12 @@ public class EmailService {
     public void sendOtp(String email, String otp) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(email);
-        msg.setSubject("QuickService Email Verification");
-        msg.setText("Your OTP is: " + otp);
+        msg.setSubject("QuickService – OTP Verification");
+        msg.setText(
+                "Your One-Time Password (OTP) is: " + otp +
+                        "\n\nThis OTP is valid for 5 minutes."
+        );
+
         mailSender.send(msg);
     }
 }

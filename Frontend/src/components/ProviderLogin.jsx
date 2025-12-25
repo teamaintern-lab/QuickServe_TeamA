@@ -64,6 +64,20 @@ if (onLoginSuccess) {
       alert("Login failed. Please try again.");
     }
   };
+const handleForgotPassword = () => {
+  if (!formData.email) {
+    alert("Please enter your registered email first.");
+    return;
+  }
+
+  if (onLoginSuccess) {
+    onLoginSuccess({
+      action: "FORGOT_PASSWORD",
+      role: "PROVIDER",
+      email: formData.email
+    });
+  }
+};
 
   return (
     <div className="auth-form-container provider-login">
@@ -115,6 +129,15 @@ if (onLoginSuccess) {
               {showPassword ? "👁️" : "👁️‍🗨️"}
             </button>
           </div>
+        </div>
+        <div className="forgot-password">
+          <button
+            type="button"
+            className="link-btn"
+            onClick={handleForgotPassword}
+          >
+            Forgot Password?
+          </button>
         </div>
 
         <button type="submit" className="submit-btn provider-btn">

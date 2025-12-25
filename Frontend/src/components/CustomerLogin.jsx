@@ -79,6 +79,21 @@ export default function CustomerLogin({ onBack, onLoginSuccess }) {
       setLoading(false);
     }
   };
+// Navigate to OTP-based Forgot Password flow
+const handleForgotPassword = () => {
+  if (!formData.email) {
+    setErrorMsg("Please enter your registered email first.");
+    return;
+  }
+
+  if (onLoginSuccess) {
+    onLoginSuccess({
+      action: "FORGOT_PASSWORD",
+      role: "CUSTOMER",
+      email: formData.email
+    });
+  }
+};
 
   return (
     <div className="auth-form-container customer-login">
@@ -133,6 +148,15 @@ export default function CustomerLogin({ onBack, onLoginSuccess }) {
               {showPassword ? "👁️" : "👁️‍🗨️"}
             </button>
           </div>
+        </div>
+        <div className="forgot-password">
+          <button
+            type="button"
+            className="link-btn"
+            onClick={handleForgotPassword}
+          >
+            Forgot Password?
+          </button>
         </div>
 
         <button

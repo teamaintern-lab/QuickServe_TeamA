@@ -8,38 +8,50 @@ import CustomerDashboard from "./components/CustomerDashboard";
 import ProviderDashboard from "./components/ProviderDashboard";
 import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
+import ForgotPassword from "./components/ForgotPassword";
 
 export default function App() {
   const [screen, setScreen] = useState("home");
   const [currentUser, setCurrentUser] = useState(null);
+const [resetEmail, setResetEmail] = useState("");
+const [resetRole, setResetRole] = useState("");
 
   // Navigation handlers
   const openRoleSelector = () => setScreen("roleSelector");
   const openRegister = () => setScreen("register");
 
-  const handleLoginSuccess = (user) => {
-    // FIXED: Pass correct data required by dashboards
-    const formattedUser = {
-  userId: user.userId,
-  fullName: user.fullName,
-  email: user.email,
-  phone: user.phone || "",
-  role: user.role,
-  category: user.category || "",
-  customService: user.customService || ""
-};
+  const handleLoginSuccess = (data) => {
 
+    // FORGOT PASSWORD FLOW
+    if (data?.action === "FORGOT_PASSWORD") {
+      setResetEmail(data.email);
+      setResetRole(data.role);
+      setScreen("forgotPassword");
+      return;
+    }
+
+    // NORMAL LOGIN FLOW
+    const formattedUser = {
+      userId: data.userId,
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone || "",
+      role: data.role,
+      category: data.category || "",
+      customService: data.customService || ""
+    };
 
     setCurrentUser(formattedUser);
 
     if (formattedUser.role === "CUSTOMER") {
-          setScreen("customerDashboard");
-        } else if (formattedUser.role === "PROVIDER") {
-          setScreen("providerDashboard");
-        } else if (formattedUser.role === "ADMIN") {
-          setScreen("adminDashboard");
-        }
-      };
+      setScreen("customerDashboard");
+    } else if (formattedUser.role === "PROVIDER") {
+      setScreen("providerDashboard");
+    } else if (formattedUser.role === "ADMIN") {
+      setScreen("adminDashboard");
+    }
+  };
+
 
   const goHome = () => setScreen("home");
 
@@ -132,6 +144,19 @@ export default function App() {
           }}
         />
       )}
+{screen === "forgotPassword" && (
+  <div className="auth-container">
+    <ForgotPassword
+      email={resetEmail}
+      role={resetRole}
+      onBack={() => setScreen(
+        resetRole === "CUSTOMER"
+          ? "customerLogin"
+          : "providerLogin"
+      )}
+    />
+  </div>
+)}
 
     </>
   );

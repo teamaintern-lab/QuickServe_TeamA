@@ -126,5 +126,22 @@ public class AuthController {
 
         return ResponseEntity.ok(resp);
     }
+    /* ===== RESET PASSWORD ===== */
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> req) {
+        try {
+            authService.resetPassword(
+                    req.get("email"),
+                    req.get("newPassword")
+            );
+            return ResponseEntity.ok(
+                    Map.of("success", true, "message", "Password reset successful")
+            );
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("success", false, "message", ex.getMessage())
+            );
+        }
+    }
 
 }

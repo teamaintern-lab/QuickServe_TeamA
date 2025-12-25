@@ -17,7 +17,6 @@ export const getSession = () => api.get("/auth/session");
 
 export const resendOtp = (data) =>
   api.post("/auth/resend-otp", data);
-
 /* ===============================
    USER
 ================================ */
@@ -104,12 +103,15 @@ export const deleteAdminService = (id) =>
 ================================ */
 export default api;
 
-export const generateOtp = (email) =>
-  api.post("/auth/generate-otp", { email });
-
-export const verifyEmailOtp = (data) =>
-  api.post("/auth/verify-email-otp", data);
 
 export const signup = (data) =>
   api.post("/auth/signup", data);
 
+export const generateOtp = (data) =>
+  api.post("/auth/generate-otp", data);
+
+export const verifyEmailOtp = (data) =>
+  api.post("/auth/verify-email-otp", data);
+
+export const resetPassword = (data) =>
+  api.post("/auth/reset-password", data);

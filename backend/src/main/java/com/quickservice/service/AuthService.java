@@ -28,13 +28,10 @@ public class AuthService {
     }
 
     /* ===== GENERATE OTP ===== */
+    /* ===== GENERATE OTP (SIGNUP + FORGOT PASSWORD) ===== */
     public void generateOtp(String email) {
 
         email = email.trim().toLowerCase();
-
-        if (userRepository.existsByEmailIgnoreCase(email)) {
-            throw new IllegalArgumentException("Email already registered");
-        }
 
         String otp = OtpUtil.generateOtp();
 
@@ -44,12 +41,13 @@ public class AuthService {
 
         record.setEmail(email);
         record.setOtp(otp);
-        record.setExpiry(Instant.now().plusSeconds(300));
+        record.setExpiry(Instant.now().plusSeconds(300)); // 5 min
         record.setVerified(false);
 
         otpTempRepository.save(record);
         emailService.sendOtp(email, otp);
     }
+
 
     /* ===== VERIFY OTP ===== */
     public void verifyEmailOtp(String email, String otp) {
@@ -95,10 +93,6 @@ public class AuthService {
             throw new IllegalArgumentException("OTP expired. Please regenerate.");
         }
 
-        if (userRepository.existsByEmailIgnoreCase(email)) {
-            throw new IllegalArgumentException("Email already registered");
-        }
-
         String hashed = BCrypt.withDefaults()
                 .hashToString(12, req.getPassword().toCharArray());
 
@@ -134,6 +128,36 @@ public class AuthService {
 
     public User save(User user) {
         return userRepository.save(user);
+    }
+    /* ===== RESET PASSWORD (OTP REQUIRED) ===== */
+    public void resetPassword(String email, String newPassword) {
+
+        email = email.trim().toLowerCase();
+
+        OtpTemp record = otpTempRepository
+                .findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new IllegalArgumentException("OTP not generated"));
+
+        if (!Boolean.TRUE.equals(record.getVerified())) {
+            throw new IllegalArgumentException("OTP not verified");
+        }
+
+        if (Instant.now().isAfter(record.getExpiry())) {
+            otpTempRepository.delete(record);
+            throw new IllegalArgumentException("OTP expired");
+        }
+
+        User user = userRepository
+                .findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        String hashed = BCrypt.withDefaults()
+                .hashToString(12, newPassword.toCharArray());
+
+        user.setPassword(hashed);
+        userRepository.save(user);
+
+        otpTempRepository.delete(record); // cleanup
     }
 
 }

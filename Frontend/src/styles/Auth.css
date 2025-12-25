@@ -807,3 +807,62 @@ body {
 .admin-card {
   border: 1.5px solid #2563eb;
 }
+/* ===============================
+   OTP BUTTON COLORS
+================================ */
+
+/* Send OTP – Blue */
+.otp-send-btn {
+  background-color: #2563eb; /* blue-600 */
+}
+.otp-send-btn:hover {
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+/* Verify OTP – Green */
+.otp-verify-btn {
+  background-color: #16a34a; /* green-600 */
+}
+.otp-verify-btn:hover {
+  background-color: #15803d; /* green-700 */
+}
+
+/* Reset Password – Red */
+.otp-reset-btn {
+  background-color: #dc2626; /* red-600 */
+}
+.otp-reset-btn:hover {
+  background-color: #b91c1c; /* red-700 */
+}
+
+/* Disabled state consistency */
+.otp-send-btn:disabled,
+.otp-verify-btn:disabled,
+.otp-reset-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* ===============================
+   OTP BUTTON TEXT COLOR
+================================ */
+
+.otp-send-btn,
+.otp-verify-btn,
+.otp-reset-btn {
+  color: #ffffff;          /* white text */
+  font-weight: 600;
+}
+
+/* Ensure text stays white on hover */
+.otp-send-btn:hover,
+.otp-verify-btn:hover,
+.otp-reset-btn:hover {
+  color: #ffffff;
+}
+
+/* Disabled state text color */
+.otp-send-btn:disabled,
+.otp-verify-btn:disabled,
+.otp-reset-btn:disabled {
+  color: #ffffff;
+}
