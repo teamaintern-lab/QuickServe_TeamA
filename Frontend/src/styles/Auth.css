@@ -587,3 +587,223 @@
     font-size: 24px;
   }
 }
+/* FORCE CENTER ALL AUTH SCREENS */
+.auth-wrapper,
+.auth-container,
+.role-container {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex !important;
+  flex-direction: column;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Prevent content from shrinking */
+.auth-form-container,
+.role-wrapper {
+  max-width: 420px;
+  width: 100%;
+}
+/* FIX OVERRIDE: stop index.css from forcing flex on all pages */
+body {
+  display: block !important;
+  place-items: unset !important;
+}
+/* Reduce width of text fields */
+.auth-form-container .form-input,
+.auth-form-container .form-select {
+  width: 280px;          /* reduced size */
+  max-width: 90%;
+}
+
+/* Center form more tightly */
+.auth-form-container {
+  width: 350px;
+  margin: 40px auto;
+  padding-top: 60px;     /* space for Home button */
+}
+
+/* Home button top-left */
+.auth-home-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #4a4a4a;
+}
+
+.auth-home-btn:hover {
+  color: #000;
+}
+/* Home button for Register Page ONLY */
+.register-home-btn {
+  background: transparent;
+  border: 1px solid #d0d0ff;
+  color: #4a4aff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  margin-left: 10px;
+
+  transition: all 0.2s ease-in-out;
+}
+
+.register-home-btn:hover {
+  background-color: #e8e8ff;
+  border-color: #8a8aff;
+}
+/* Register page specific home button (top-right) */
+.register-home-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 1200;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: transparent;
+  color: #4a4aff;
+  border: 1px solid rgba(74, 74, 255, 0.25);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(80,80,140,0.06);
+  transition: transform 0.08s ease, background 0.12s ease;
+}
+
+.register-home-btn:hover {
+  background: rgba(74,74,255,0.06);
+  transform: translateY(-1px);
+  border-color: rgba(74,74,255,0.45);
+}
+
+/* limit the width of inputs for better layout */
+.auth-form .form-input,
+.auth-form .form-select {
+  max-width: 520px; /* reduces field length */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ensure container content is centered (if you want) */
+.register-page .auth-header,
+.register-page .auth-form {
+  margin: 0 auto;
+  max-width: 760px;
+}
+/* REGISTER NAVBAR */
+.auth-navbar {
+  width: 100%;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: transparent;
+  z-index: 1000;
+}
+
+.nav-home-btn {
+  background: #ffffff;
+  color: #4a4aff;
+  padding: 8px 18px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(74, 74, 255, 0.25);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.nav-home-btn:hover {
+  background: #f3f3ff;
+}
+
+/* Center the Register Box */
+.register-box {
+  margin-top: 90px; 
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Shorter input fields */
+.short-input {
+  max-width: 400px;
+}
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+.auth-form-container {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 80px auto 40px;
+
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 30px;
+
+  border: 1px solid rgba(220, 220, 240, 0.5);
+  box-shadow: 0 20px 60px rgba(180, 180, 200, 0.15);
+}
+.auth-form {
+  height: auto;
+  overflow: visible;
+}
+
+.auth-form-container {
+  height: auto;
+  overflow: visible;
+}
+
+.otp-section {
+  margin-top: 24px;
+}
+/* ADMIN BUTTON STYLE */
+.admin-btn {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb); /* Deep blue */
+  color: #ffffff;
+  border: none;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
+}
+
+/* Hover effect */
+.admin-btn:hover {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
+}
+
+/* Active (click) effect */
+.admin-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+.admin-card {
+  border: 1.5px solid #2563eb;
+}

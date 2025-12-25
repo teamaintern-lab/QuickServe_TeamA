@@ -1,8 +1,9 @@
 import '../styles/Home.css';
 
-export default function Home({ onLogin }) {
+export default function Home({ onOpenRoleSelector, onOpenRegister  }) {
   return (
     <div className="home-container">
+
       {/* Navigation Bar */}
       <nav className="navbar">
         <div className="navbar-content">
@@ -10,7 +11,9 @@ export default function Home({ onLogin }) {
             <span className="logo-icon">⚡</span>
             <span className="logo-text">QuickServe</span>
           </div>
-          <button onClick={onLogin} className="login-nav-btn">
+
+          {/* manual session navigation */}
+          <button onClick={onOpenRoleSelector} className="login-nav-btn">
             Login / Register
           </button>
         </div>
@@ -22,20 +25,26 @@ export default function Home({ onLogin }) {
           <h1 className="hero-title">
             Localized Service Discovery & Booking
           </h1>
+
           <p className="hero-subtitle">
-            Connect with trusted service providers in your area. Book with confidence, 
+            Connect with trusted service providers in your area. Book with confidence,
             get services faster, and support local businesses.
           </p>
-          <button onClick={onLogin} className="hero-cta-btn">
+
+          {/* manual session navigation */}
+          <button onClick={onOpenRegister} className="hero-cta-btn">
             Get Started
           </button>
         </div>
+
         <div className="hero-illustration">
           <div className="illustration-icon">🚀</div>
         </div>
       </section>
 
       {/* Services Section */}
+      {/* … your full content, unchanged … */}
+
       <section className="services">
         <h2 className="services-title">Our Services</h2>
         <div className="services-grid">
@@ -129,6 +138,16 @@ export default function Home({ onLogin }) {
             <h3 className="service-name">Gardening</h3>
             <p className="service-desc">Landscaping & garden maintenance</p>
           </div>
+          <div className="service-card">
+  <div className="service-icon">🎨</div>
+  <h3 className="service-name">Home Painting</h3>
+  <p className="service-desc">Interior & exterior painting for homes and offices</p>
+</div>
+<div className="service-card">
+  <div className="service-icon">🛡️</div>
+  <h3 className="service-name">Home Security</h3>
+  <p className="service-desc">CCTV, alarms & advanced home security setup</p>
+</div>
         </div>
       </section>
 
@@ -180,7 +199,7 @@ export default function Home({ onLogin }) {
             </p>
           </div>
         </div>
-        <button onClick={onLogin} className="provider-cta-btn">
+        <button onClick={onOpenRegister} className="provider-cta-btn">
           Register as Service Provider
         </button>
       </section>
@@ -297,14 +316,13 @@ export default function Home({ onLogin }) {
         </div>
       </section>
 
-      {/* CTA Section */}
+       {/* CTA Section */}
       <section className="cta-section">
         <div className="cta-content">
           <h2 className="cta-title">Ready to Get Started?</h2>
-          <p className="cta-subtitle">
-            Join thousands of satisfied customers and service providers
-          </p>
-          <button onClick={onLogin} className="cta-btn">
+
+          {/* manual session navigation */}
+          <button onClick={onOpenRoleSelector} className="cta-btn">
             Login / Register Now
           </button>
         </div>

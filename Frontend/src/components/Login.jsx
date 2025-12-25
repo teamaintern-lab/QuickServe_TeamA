@@ -1,33 +1,51 @@
-import { useState } from 'react';
-import '../styles/Auth.css';
+import { useState } from "react";
+import { login } from "../services/api";      // backend login
+import "../styles/Auth.css";
 
-export default function Login({ onLogin }) {
+export default function Login({ onLoginSuccess }) {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.email || !formData.password) {
-      alert('Please fill in all fields!');
+      alert("Please fill in all fields!");
       return;
     }
 
-    const success = onLogin(formData.email, formData.password);
-    if (success) {
-      setFormData({ email: '', password: '' });
+    try {
+      const res = await login({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (res.data && res.data.success) {
+        // store logged-in user
+        localStorage.setItem("currentUser", JSON.stringify(res.data.user));
+
+        // manual session navigation
+        onLoginSuccess(res.data.user);
+
+        setFormData({ email: "", password: "" });
+      } else {
+        alert(res.data.message || "Invalid email or password");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Login failed. Server error.");
     }
   };
 
@@ -40,9 +58,7 @@ export default function Login({ onLogin }) {
 
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
-          <label htmlFor="email" className="form-label">
-            Email Address
-          </label>
+          <label htmlFor="email" className="form-label">Email Address</label>
           <div className="input-wrapper">
             <span className="input-icon">✉️</span>
             <input
@@ -58,13 +74,11 @@ export default function Login({ onLogin }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
+          <label htmlFor="password" className="form-label">Password</label>
           <div className="input-wrapper">
             <span className="input-icon">🔒</span>
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               value={formData.password}
@@ -77,7 +91,7 @@ export default function Login({ onLogin }) {
               className="toggle-password"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? "👁️" : "👁️‍🗨️"}
             </button>
           </div>
         </div>

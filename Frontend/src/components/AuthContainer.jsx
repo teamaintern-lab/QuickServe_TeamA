@@ -1,78 +1,134 @@
-import { useState } from 'react';
-import RoleSelector from './RoleSelector';
-import Register from './Register';
-import CustomerLogin from './CustomerLogin';
-import ProviderLogin from './ProviderLogin';
-import '../styles/Auth.css';
+import { useState, useEffect } from "react";
+import RoleSelector from "./RoleSelector";
+import Register from "./Register";
+import CustomerLogin from "./CustomerLogin";
+import ProviderLogin from "./ProviderLogin";
+import "../styles/Auth.css";
 
-export default function AuthContainer({ onBackToHome, onLoginSuccess }) {
-  const [screen, setScreen] = useState('roleSelector'); // 'roleSelector', 'customerLogin', 'providerLogin', 'register'
-  const [users, setUsers] = useState([]);
+import { login, signup } from "../services/api";
+import { setCurrentUser } from "../services/session";
 
-  const handleRegister = (userData) => {
-    const userExists = users.some(u => u.email === userData.email);
-    if (userExists) {
-      alert('Email already registered!');
+export default function AuthContainer({ onBackToHome, onLoginSuccess, openRegister = false }) {
+  
+  const [screen, setScreen] = useState("roleSelector");
+
+  // If openRegister=true => open Register screen automatically
+  useEffect(() => {
+    if (openRegister) {
+      setScreen("register");
+    }
+  }, [openRegister]);
+
+  // SIGNUP HANDLER
+  const handleRegister = async (data) => {
+    try {
+      const res = await signup({
+        fullName: data.username,
+        email: data.email,
+        password: data.password,
+        role: data.role.toUpperCase(),
+        category: data.category,
+        customService: data.customService,
+        experience: data.experience
+      });
+
+      if (res.data.success) {
+        alert("Registration successful! Please login.");
+        setScreen("roleSelector");
+        return true;
+      }
+
+      alert(res.data.message || "Signup failed");
+      return false;
+    } catch (err) {
+      console.error(err);
+      alert("Signup failed.");
       return false;
     }
-    setUsers(prev => [...prev, userData]);
-    alert('Registration successful! Please login with your role.');
-    setScreen('roleSelector');
-    return true;
   };
 
-  const handleLogin = (email, password, role) => {
-    const user = users.find(u => u.email === email && u.password === password);
-    if (!user) {
-      alert('Invalid email or password!');
+  // LOGIN HANDLER
+  const handleLogin = async (email, password, roleRequested) => {
+    try {
+      const res = await login({ email, password });
+
+      if (!res.data.success) {
+        alert("Invalid email or password!");
+        return false;
+      }
+
+      const backendRole = res.data.role;
+
+      if (roleRequested === "provider" && backendRole !== "PROVIDER") {
+        alert("This account is not a provider account.");
+        return false;
+      }
+      if (roleRequested === "customer" && backendRole !== "CUSTOMER") {
+        alert("This account is not a customer account.");
+        return false;
+      }
+
+      const user = {
+        userId: res.data.userId,
+        fullName: res.data.fullName,
+        role: backendRole
+      };
+
+      setCurrentUser(user);
+
+      if (onLoginSuccess) onLoginSuccess(user);
+
+      alert(`Welcome back, ${user.fullName}!`);
+      return true;
+
+    } catch (err) {
+      console.error(err);
+      alert("Login failed.");
       return false;
     }
-    if (user.role !== role) {
-      alert(`This account is registered as a ${user.role}. Please use the correct login.`);
-      return false;
-    }
-    // successful login: persist and show welcome message
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    alert(`Welcome back, ${user.username}!`);
-    // Call the callback after a brief delay to allow alert to be seen
-    if (onLoginSuccess) {
-      setTimeout(() => onLoginSuccess(user), 500);
-    }
-    return true;
   };
 
+  // ROLE SELECTION HANDLER
   const handleSelectRole = (role) => {
-    if (role === 'customer') setScreen('customerLogin');
-    else if (role === 'provider') setScreen('providerLogin');
+    if (role === "customer") setScreen("customerLogin");
+    if (role === "provider") setScreen("providerLogin");
   };
 
   return (
     <div className="auth-container">
-      <button className="back-to-home-btn" onClick={onBackToHome} title="Back to Home">
+      <button className="back-to-home-btn" onClick={onBackToHome}>
         ← Home
       </button>
+
       <div className="auth-wrapper">
-        {screen === 'roleSelector' && (
+
+        {screen === "roleSelector" && (
           <RoleSelector
             onSelectRole={handleSelectRole}
-            onRegister={() => setScreen('register')}
+            onRegister={() => setScreen("register")}
           />
         )}
 
-        {screen === 'customerLogin' && (
-          <CustomerLogin onLogin={handleLogin} onBack={() => setScreen('roleSelector')} />
+        {screen === "customerLogin" && (
+          <CustomerLogin
+            onLogin={handleLogin}
+            onBack={() => setScreen("roleSelector")}
+          />
         )}
 
-        {screen === 'providerLogin' && (
-          <ProviderLogin onLogin={handleLogin} onBack={() => setScreen('roleSelector')} />
+        {screen === "providerLogin" && (
+          <ProviderLogin
+            onLogin={handleLogin}
+            onBack={() => setScreen("roleSelector")}
+          />
         )}
 
-        {screen === 'register' && (
+        {screen === "register" && (
           <>
             <Register onRegister={handleRegister} />
             <p className="toggle-text">
-              Already have an account?{' '}
-              <button className="toggle-btn" onClick={() => setScreen('roleSelector')}>
+              Already have an account?{" "}
+              <button className="toggle-btn" onClick={() => setScreen("roleSelector")}>
                 Login here
               </button>
             </p>

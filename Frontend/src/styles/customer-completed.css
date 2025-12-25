@@ -1,0 +1,229 @@
+/* ===============================
+   GLOBAL / PAGE BACKGROUND
+   =============================== */
+.completed-container {
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, #e6f0ff, #f4f8ff);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  color: #1e293b;
+}
+
+/* ===============================
+   EMPTY & LOADING STATES
+   =============================== */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  font-size: 1.1rem;
+  color: #475569;
+}
+
+/* ===============================
+   LIST LAYOUT
+   =============================== */
+.completed-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* ===============================
+   CARD
+   =============================== */
+.completed-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 64, 128, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.completed-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(59, 130, 246, 0.08),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.completed-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 64, 128, 0.2);
+}
+
+.completed-card:hover::before {
+  opacity: 1;
+}
+
+/* ===============================
+   HEADER
+   =============================== */
+.completed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.completed-header h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  margin: 0;
+}
+
+.completed-provider {
+  font-size: 0.9rem;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* ===============================
+   META
+   =============================== */
+.completed-meta {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 14px;
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+.action-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #93c5fd;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #ffffff;
+  border: none;
+}
+
+.action-btn.primary:hover {
+  opacity: 0.95;
+}
+
+/* ===============================
+   FEEDBACK FORM
+   =============================== */
+.feedback-form {
+  margin-top: 12px;
+  background: #f8fbff;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #dbeafe;
+}
+
+/* ===============================
+   STAR RATING
+   =============================== */
+.star-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #cbd5f5;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.star-btn:hover {
+  transform: scale(1.15);
+}
+
+.star-btn.filled {
+  color: #2563eb;
+}
+
+/* ===============================
+   TEXTAREA
+   =============================== */
+.feedback-textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #bfdbfe;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feedback-textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* ===============================
+   FEEDBACK ACTIONS
+   =============================== */
+.feedback-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ===============================
+   REVIEW DISPLAY
+   =============================== */
+.review-text {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #334155;
+  background: #eff6ff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 768px) {
+  .completed-container {
+    padding: 16px;
+  }
+
+  .completed-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .feedback-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

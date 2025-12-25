@@ -1,33 +1,67 @@
-import { useState } from 'react';
-import '../styles/Auth.css';
+import { useState } from "react";
+import "../styles/Auth.css";
+import { login } from "../services/api";
+import { setCurrentUser } from "../services/session";
 
-export default function ProviderLogin({ onLogin, onBack }) {
+export default function ProviderLogin({ onBack, onLoginSuccess }) {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: ""
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      alert('Please fill in all fields!');
+      alert("Please enter both email and password.");
       return;
     }
 
-    const success = onLogin(formData.email, formData.password, 'provider');
-    if (success) {
-      setFormData({ email: '', password: '' });
+    try {
+      const res = await login({
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (!res.data.success) {
+        alert("Invalid email or password.");
+        return;
+      }
+
+      if (res.data.role !== "PROVIDER") {
+        alert("This account is not a provider account.");
+        return;
+      }
+
+      // STORE USER SESSION
+      // STORE USER SESSION (FIXED: include email & service)
+const provider = {
+  userId: res.data.userId,
+  fullName: res.data.fullName,
+  email: res.data.email,
+  role: res.data.role,
+  category: res.data.category,
+  customService: res.data.customService
+};
+
+setCurrentUser(provider);
+
+// INFORM PARENT TO NAVIGATE TO DASHBOARD
+if (onLoginSuccess) {
+  onLoginSuccess(provider);
+}
+
+
+    } catch (err) {
+      console.error(err);
+      alert("Login failed. Please try again.");
     }
   };
 
@@ -45,44 +79,40 @@ export default function ProviderLogin({ onLogin, onBack }) {
 
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
-          <label htmlFor="email" className="form-label">
-            Email Address
-          </label>
+          <label className="form-label">Email Address</label>
           <div className="input-wrapper">
             <span className="input-icon">✉️</span>
             <input
               type="email"
-              id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="your@email.com"
+              placeholder="you@example.com"
               className="form-input"
+              required
             />
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
+          <label className="form-label">Password</label>
           <div className="input-wrapper">
             <span className="input-icon">🔒</span>
             <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
               className="form-input"
+              required
             />
             <button
               type="button"
               className="toggle-password"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? "👁️" : "👁️‍🗨️"}
             </button>
           </div>
         </div>

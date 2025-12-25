@@ -1,0 +1,193 @@
+/* ===============================
+   SUPPORT TAB – SCOPED STYLES
+   =============================== */
+
+.support-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* HEADER ROW */
+.support-tab .ticket-header-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.support-tab .create-ticket-btn {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.support-tab .create-ticket-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* SUPPORT TICKET CARD */
+.support-tab .support-ticket {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 64, 128, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.support-tab .support-ticket:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 64, 128, 0.18);
+}
+
+/* SUBJECT */
+.support-tab .support-ticket h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* DATE */
+.support-tab .support-ticket p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* VIEW BUTTON */
+.support-tab .support-ticket .action-btn {
+  align-self: flex-start;
+  margin-top: 6px;
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  color: #1d4ed8;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.support-tab .support-ticket .action-btn:hover {
+  background: #dbeafe;
+}
+
+/* EMPTY STATE (FUTURE SAFE) */
+.support-tab .empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .support-tab .support-ticket {
+    padding: 16px;
+  }
+
+  .support-tab .create-ticket-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+.support-tab .details-modal {
+  width: 100%;
+  max-width: 500px;
+  padding: 24px;
+}
+/* ===============================
+   FORCE FIX – SUPPORT MODAL INPUT OVERFLOW
+   =============================== */
+
+.support-tab .modal-overlay * {
+  box-sizing: border-box;
+}
+
+.support-tab .modal-content,
+.support-tab .details-modal {
+  width: 100%;
+  max-width: 600px;
+  padding: 24px;
+  overflow: hidden; /* HARD STOP overflow */
+}
+
+/* Force inputs to respect container */
+.support-tab .modal-content input,
+.support-tab .modal-content textarea {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;      /* KEY FIX */
+  box-sizing: border-box !important;
+  display: block;
+}
+
+/* Prevent textarea resize from breaking layout */
+.support-tab textarea {
+  resize: vertical;
+  min-height: 120px;
+  max-width: 100% !important;
+}
+/* ======================================
+   FINAL HARD RESET – SUPPORT MODAL
+   ====================================== */
+
+.support-tab .support-modal-body {
+  all: unset;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Force labels above inputs */
+.support-tab .support-field {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  row-gap: 6px !important;
+  width: 100%;
+}
+
+/* Kill inline styles */
+.support-tab .support-field label {
+  display: block !important;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+/* Force full-width inputs */
+.support-tab .support-field input,
+.support-tab .support-field textarea {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #c7d2fe;
+  font-size: 0.95rem;
+}
+
+/* Textarea height */
+.support-tab .support-field textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+/* Buttons */
+.support-tab .support-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}

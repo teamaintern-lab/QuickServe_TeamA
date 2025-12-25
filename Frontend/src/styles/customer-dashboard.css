@@ -1,0 +1,552 @@
+/* =====================================
+   CUSTOMER DASHBOARD – FULL STYLES
+   ===================================== */
+
+/* ---------- Root ---------- */
+
+.dashboard-container {
+  background: #f7f8fc;
+  min-height: 100vh;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Header ---------- */
+
+.dashboard-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 72px;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: linear-gradient(135deg, #eef2ff, #fdfcff);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  z-index: 1000;
+}
+
+/* ---------- Header Left ---------- */
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  font-size: 28px;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1f2937;
+}
+
+.user-role {
+  font-size: 13px;
+  color: #6366f1;
+}
+
+/* ---------- Header Tabs ---------- */
+
+.header-tabs {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+
+.header-tabs button {
+  background: #f5f6fa;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-tabs button:hover {
+  background: #e8ebff;
+  transform: translateY(-1px);
+}
+
+.header-tabs button.active {
+  background: #eef2ff;
+  color: #4338ca;
+  box-shadow: inset 0 0 0 2px #6366f1;
+}
+
+/* ---------- Logout Button ---------- */
+
+.logout-btn {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+
+  background: transparent;
+  border: 2px solid #fca5a5;
+  color: #dc2626;
+
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #fee2e2;
+}
+
+/* ---------- Main Section ---------- */
+
+.dashboard-main {
+  padding-top: 72px; /* header height */
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 40px;
+}
+
+/* ---------- Page Title ---------- */
+
+.page-title {
+  margin: 24px 0 18px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* ---------- Tab Content ---------- */
+
+.tab-content {
+  margin-top: 12px;
+}
+
+/* ---------- Home / Services ---------- */
+
+.customer-home-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.customer-home-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.customer-home-header p {
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 520px;
+  padding: 14px 18px;
+
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+
+  font-size: 14px;
+}
+
+.search-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+/* ---------- New Booking Button ---------- */
+
+.new-booking-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.new-booking-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99,102,241,0.35);
+}
+
+/* ---------- Booking Cards ---------- */
+
+.bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.booking-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.1);
+}
+
+.booking-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.booking-card p {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* ---------- Status Pill ---------- */
+
+.status-pill {
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* ---------- View Details Button ---------- */
+
+.view-details-btn {
+  margin-top: auto;
+  padding: 10px;
+
+  border-radius: 10px;
+  border: none;
+
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.view-details-btn:hover {
+  background: #4f46e5;
+}
+
+/* ---------- Completed / Empty State ---------- */
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  background: #ffffff;
+  border-radius: 14px;
+  color: #6b7280;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* ---------- Support Tickets ---------- */
+
+.support-ticket {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.support-ticket h3 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.support-ticket p {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .header-tabs {
+    display: none;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .booking-card {
+    padding: 12px;
+  }
+}
+/* ===============================
+   CUSTOMER COMPLETED SERVICES
+   =============================== */
+
+.completed-container {
+  margin-top: 12px;
+}
+
+/* ---------- Section Title ---------- */
+
+.section-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+/* ---------- Empty State ---------- */
+
+.empty-state {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 48px 24px;
+  text-align: center;
+  font-size: 15px;
+  color: #6b7280;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.05);
+}
+
+/* ---------- Completed List ---------- */
+
+.completed-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* ---------- Card ---------- */
+
+.completed-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.completed-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.1);
+}
+
+/* ---------- Header ---------- */
+
+.completed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.completed-header h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.completed-provider {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+/* ---------- Meta ---------- */
+
+.completed-meta {
+  margin: 6px 0 12px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ---------- Feedback ---------- */
+
+.feedback-form {
+  margin-top: 10px;
+}
+
+.feedback-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* ---------- Stars ---------- */
+
+.star-row {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0 12px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-btn:hover {
+  transform: scale(1.15);
+}
+
+.star-btn.filled {
+  color: #facc15;
+}
+
+/* ---------- Textarea ---------- */
+
+.feedback-textarea {
+  width: 100%;
+  min-height: 70px;
+  resize: vertical;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.15s ease, box-shadow 0.15s ease;
+}
+
+.feedback-textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+/* ---------- Feedback Actions ---------- */
+
+.feedback-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* ---------- Given Feedback ---------- */
+
+.given-feedback {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.review-text {
+  margin-top: 6px;
+  padding: 10px;
+  background: #f9fafb;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* ---------- Buttons ---------- */
+
+.action-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  transform: translateY(-1px);
+}
+
+.action-btn:not(.primary) {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.action-btn:not(.primary):hover {
+  background: #e5e7eb;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 22px;
+  }
+
+  .completed-list {
+    grid-template-columns: 1fr;
+  }
+}
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+}
+.dashboard-main {
+  padding-top: 96px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 40px;
+}
+
+.page-title {
+  margin-top: 0;
+  padding-top: 16px;
+}
+.dashboard-container {
+  padding-top: 60px;
+}
+
+.dashboard-main {
+  padding-top: 0;
+}
+
+.page-title {
+  margin-top: 0;
+  padding-top: 16px;
+}

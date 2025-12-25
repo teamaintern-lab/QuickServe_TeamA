@@ -1,0 +1,303 @@
+/* ===============================
+   CUSTOMER HOME – LAYOUT
+   =============================== */
+
+.customer-home {
+  padding: 24px;
+  background: #f8fafc;
+  min-height: 100%;
+}
+
+/* ===============================
+   HEADER
+   =============================== */
+
+.customer-home-header {
+  margin-bottom: 28px;
+}
+
+.customer-home-header h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.customer-home-header p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* ===============================
+   SEARCH BAR
+   =============================== */
+
+.service-search {
+  margin-top: 16px;
+  max-width: 520px;
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 40px 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #c7d2fe;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e5e7eb;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #374151;
+}
+
+.search-clear:hover {
+  background: #c7d2fe;
+}
+
+/* ===============================
+   SERVICES GRID
+   =============================== */
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ===============================
+   SERVICE CARD
+   =============================== */
+
+.service-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.15);
+}
+
+/* ===============================
+   CARD HEADER
+   =============================== */
+
+.service-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.service-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #ffffff;
+}
+
+.service-meta h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.provider-name {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* ===============================
+   DESCRIPTION
+   =============================== */
+
+.service-desc {
+  font-size: 0.9rem;
+  color: #475569;
+  margin: 10px 0 14px;
+  line-height: 1.4;
+}
+
+/* ===============================
+   FOOTER
+   =============================== */
+
+.service-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.price-rating {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.price-rating strong {
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.rating {
+  font-size: 0.8rem;
+  color: #f59e0b;
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.action-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+}
+
+/* ===============================
+   EMPTY STATE
+   =============================== */
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+
+@media (max-width: 600px) {
+  .customer-home {
+    padding: 16px;
+  }
+
+  .service-search {
+    max-width: 100%;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* Smaller Book Now button */
+.service-card .action-btn.primary {
+  padding: 6px 10px;      /* was larger */
+  font-size: 0.75rem;     /* smaller text */
+  border-radius: 8px;
+}
+.service-card .action-btn.primary:hover {
+  transform: translateY(-0.5px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+/* Compact service cards */
+.service-card {
+  padding: 14px;                 /* reduced padding */
+  border-radius: 14px;
+}
+
+/* Tighter header spacing */
+.service-head {
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+/* Smaller icon */
+.service-icon {
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+}
+
+/* Slightly smaller text */
+.service-meta h3 {
+  font-size: 0.95rem;
+}
+
+.provider-name {
+  font-size: 0.75rem;
+}
+
+/* Tighter description */
+.service-desc {
+  font-size: 0.82rem;
+  margin: 8px 0 10px;
+  line-height: 1.35;
+}
+
+/* Footer spacing */
+.service-footer {
+  gap: 8px;
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+
+  max-width: 1100px;      /* KEY FIX */
+  margin: 0 auto;        /* center the grid */
+}
+
+/* Search bar border enhancement */
+.search-input {
+  border: 2px solid #93c5fd;          /* visible blue border */
+  border-radius: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* On focus */
+.search-input:focus {
+  border-color: #2563eb;              /* darker blue on focus */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+.search-input:hover {
+  border-color: #60a5fa;
+}
