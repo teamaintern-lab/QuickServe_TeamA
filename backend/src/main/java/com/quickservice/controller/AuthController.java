@@ -73,7 +73,18 @@ public class AuthController {
                     .body(new AuthResponse(false, "Invalid credentials"));
         }
 
-        User user = userOpt.get(); // ✅ MOVE THIS UP
+        User user = userOpt.get();
+
+        // ✅ SAVE LOCATION ONLY FOR PROVIDERS
+        if ("PROVIDER".equals(user.getRole())
+                && req.getLatitude() != null
+                && req.getLongitude() != null) {
+
+            user.setLatitude(req.getLatitude());
+            user.setLongitude(req.getLongitude());
+
+            authService.save(user); // persist update
+        }
 
         session.setAttribute("userId", user.getId());
         session.setAttribute("role", user.getRole());
@@ -86,10 +97,12 @@ public class AuthController {
         resp.setCategory(user.getCategory());
         resp.setCustomService(user.getCustomService());
 
+// ✅ CRITICAL: SEND LOCATION BACK TO FRONTEND
+        resp.setLatitude(user.getLatitude());
+        resp.setLongitude(user.getLongitude());
+
         return ResponseEntity.ok(resp);
     }
-
-
     /* ===== LOGOUT ===== */
     @PostMapping("/logout")
     public ResponseEntity<AuthResponse> logout(HttpSession session) {
@@ -123,7 +136,8 @@ public class AuthController {
         resp.setRole(u.getRole());
         resp.setCategory(u.getCategory());
         resp.setCustomService(u.getCustomService());
-
+        resp.setLatitude(u.getLatitude());
+        resp.setLongitude(u.getLongitude());
         return ResponseEntity.ok(resp);
     }
     /* ===== RESET PASSWORD ===== */

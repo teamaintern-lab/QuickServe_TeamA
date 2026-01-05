@@ -18,4 +18,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     // OPTIONAL (category-based matching)
     List<Booking> findByServiceType(String serviceType);
+    // REQUESTED bookings by category (not yet assigned)
+    List<Booking> findByServiceTypeAndStatus(String serviceType, String status);
+
 }

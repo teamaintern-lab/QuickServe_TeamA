@@ -12,6 +12,11 @@ public class BookingRequest {
     private String providerName;
     private String phone;
     private Double amount;
+    private Double customerLatitude;
+    private Double customerLongitude;
+    private Double providerLatitude;
+    private Double providerLongitude;
+
 
     public BookingRequest() {}
 
@@ -40,4 +45,37 @@ public class BookingRequest {
 
     public String getProviderName() { return providerName; }
     public void setProviderName(String providerName) { this.providerName = providerName; }
+
+    public Double getCustomerLatitude() {
+        return customerLatitude;
+    }
+
+    public void setCustomerLatitude(Double customerLatitude) {
+        this.customerLatitude = customerLatitude;
+    }
+
+    public Double getCustomerLongitude() {
+        return customerLongitude;
+    }
+
+    public void setCustomerLongitude(Double customerLongitude) {
+        this.customerLongitude = customerLongitude;
+    }
+
+    public Double getProviderLatitude() {
+        return providerLatitude;
+    }
+
+    public void setProviderLatitude(Double providerLatitude) {
+        this.providerLatitude = providerLatitude;
+    }
+
+    public Double getProviderLongitude() {
+        return providerLongitude;
+    }
+
+    public void setProviderLongitude(Double providerLongitude) {
+        this.providerLongitude = providerLongitude;
+    }
+
 }

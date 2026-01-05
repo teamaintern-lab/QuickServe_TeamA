@@ -115,3 +115,15 @@ export const verifyEmailOtp = (data) =>
 
 export const resetPassword = (data) =>
   api.post("/auth/reset-password", data);
+export const getLiveLocation = (bookingId) =>
+  axios.get(`/api/location/${bookingId}`, { withCredentials: true });
+
+/* ===============================
+   CHAT
+================================ */
+export const sendChatMessage = (bookingId, message, senderId) =>
+  api.post(`/chat/bookings/${bookingId}/messages`, { message, senderId });
+
+export const getChatMessages = (bookingId) =>
+  api.get(`/chat/bookings/${bookingId}/messages`);
+

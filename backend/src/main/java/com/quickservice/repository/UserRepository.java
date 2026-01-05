@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRole(String role);
         long countByRole(String role);
 
+    List<User> findByRoleAndLatitudeIsNotNullAndLongitudeIsNotNull(String role);
+
 }

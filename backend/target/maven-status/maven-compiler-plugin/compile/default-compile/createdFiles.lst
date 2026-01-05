@@ -1,11 +1,14 @@
 com\quickservice\model\Ticket.class
+com\quickservice\util\GenerateBCryptPassword.class
 com\quickservice\controller\AuthController.class
 com\quickservice\QuickServiceApplication.class
+com\quickservice\service\ChatService.class
 com\quickservice\controller\BookingController.class
 com\quickservice\controller\UserController.class
 com\quickservice\dto\AuthRequest.class
 com\quickservice\service\AuthService.class
 com\quickservice\repository\UserRepository.class
+com\quickservice\controller\ChatController.class
 com\quickservice\controller\AdminController.class
 com\quickservice\controller\ProviderController.class
 com\quickservice\service\SmsService.class
@@ -25,9 +28,12 @@ com\quickservice\model\ServiceItem.class
 com\quickservice\controller\TicketController.class
 com\quickservice\repository\TicketRepository.class
 com\quickservice\config\WebConfig.class
+com\quickservice\repository\ChatMessageRepository.class
 com\quickservice\exception\GlobalExceptionHandler.class
 com\quickservice\model\User.class
 com\quickservice\service\ProviderService.class
 com\quickservice\util\OtpUtil.class
 com\quickservice\dto\AuthResponse.class
 com\quickservice\repository\OtpTempRepository.class
+com\quickservice\util\GeoUtils.class
+com\quickservice\model\ChatMessage.class

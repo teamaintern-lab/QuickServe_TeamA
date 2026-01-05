@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Home from "./components/Home";
 import RoleSelector from "./components/RoleSelector";
 import Register from "./components/Register";
@@ -6,19 +6,35 @@ import CustomerLogin from "./components/CustomerLogin";
 import ProviderLogin from "./components/ProviderLogin";
 import CustomerDashboard from "./components/CustomerDashboard";
 import ProviderDashboard from "./components/ProviderDashboard";
-import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
 import ForgotPassword from "./components/ForgotPassword";
+import { getSession } from "./services/api";
+import "leaflet/dist/leaflet.css";
 
 export default function App() {
   const [screen, setScreen] = useState("home");
   const [currentUser, setCurrentUser] = useState(null);
-const [resetEmail, setResetEmail] = useState("");
-const [resetRole, setResetRole] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetRole, setResetRole] = useState("");
 
   // Navigation handlers
   const openRoleSelector = () => setScreen("roleSelector");
   const openRegister = () => setScreen("register");
+
+  useEffect(() => {
+    // Session recovery on mount
+    const recoverSession = async () => {
+      try {
+        const resp = await getSession();
+        if (resp.data.success) {
+          handleLoginSuccess(resp.data);
+        }
+      } catch (err) {
+        // No active session or error, ignore
+      }
+    };
+    recoverSession();
+  }, []);
 
   const handleLoginSuccess = (data) => {
 
@@ -58,27 +74,25 @@ const [resetRole, setResetRole] = useState("");
   return (
     <>
       {screen === "home" && (
-        <Home 
+        <Home
           onOpenRoleSelector={openRoleSelector}
           onOpenRegister={openRegister}
         />
       )}
 
       {screen === "roleSelector" && (
-              <div className="role-container">
-                <RoleSelector
-                  onSelectRole={(role) =>
-                    role === "customer"
-                      ? setScreen("customerLogin")
-                      : role === "provider"
-                        ? setScreen("providerLogin")
-                        : setScreen("adminLogin")
-                  }
-                  onRegister={() => setScreen("register")}
-                  onBack={goHome}
-                />
-              </div>
-            )}
+        <div className="role-container">
+          <RoleSelector
+            onSelectRole={(role) =>
+              role === "customer"
+                ? setScreen("customerLogin")
+                : setScreen("providerLogin")
+            }
+            onRegister={() => setScreen("register")}
+            onBack={goHome}
+          />
+        </div>
+      )}
 
       {screen === "register" && (
         <div className="auth-container">
@@ -108,31 +122,23 @@ const [resetRole, setResetRole] = useState("");
       )}
 
       {screen === "customerDashboard" && (
-  <CustomerDashboard
-    user={currentUser}
-    onLogout={() => {
-      setCurrentUser(null);
-      setScreen("home");
-    }}
-  />
-)}
+        <CustomerDashboard
+          user={currentUser}
+          onLogout={() => {
+            setCurrentUser(null);
+            setScreen("home");
+          }}
+        />
+      )}
 
-{screen === "providerDashboard" && (
-  <ProviderDashboard
-    user={currentUser}
-    onLogout={() => {
-      setCurrentUser(null);
-      setScreen("home");
-    }}
-  />
-)}
-{screen === "adminLogin" && (
-        <div className="auth-container">
-          <AdminLogin
-            onLoginSuccess={handleLoginSuccess}
-            onBack={() => setScreen("roleSelector")}
-          />
-        </div>
+      {screen === "providerDashboard" && (
+        <ProviderDashboard
+          user={currentUser}
+          onLogout={() => {
+            setCurrentUser(null);
+            setScreen("home");
+          }}
+        />
       )}
 
       {screen === "adminDashboard" && (
@@ -144,19 +150,19 @@ const [resetRole, setResetRole] = useState("");
           }}
         />
       )}
-{screen === "forgotPassword" && (
-  <div className="auth-container">
-    <ForgotPassword
-      email={resetEmail}
-      role={resetRole}
-      onBack={() => setScreen(
-        resetRole === "CUSTOMER"
-          ? "customerLogin"
-          : "providerLogin"
+      {screen === "forgotPassword" && (
+        <div className="auth-container">
+          <ForgotPassword
+            email={resetEmail}
+            role={resetRole}
+            onBack={() => setScreen(
+              resetRole === "CUSTOMER"
+                ? "customerLogin"
+                : "providerLogin"
+            )}
+          />
+        </div>
       )}
-    />
-  </div>
-)}
 
     </>
   );
