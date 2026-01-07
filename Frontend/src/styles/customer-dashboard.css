@@ -263,6 +263,27 @@
   background: #4f46e5;
 }
 
+/* ---------- Chat Button ---------- */
+
+.chat-btn {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chat-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
 /* ---------- Completed / Empty State ---------- */
 
 .empty-state {
@@ -550,3 +571,25 @@
   margin-top: 0;
   padding-top: 16px;
 }
+.create-ticket-btn {
+  padding: 8px 16px;        /* compact size */
+  font-size: 14px;
+  font-weight: 600;
+
+  width: auto;              /* 🔴 KEY FIX */
+  display: inline-flex;     /* 🔴 KEY FIX */
+  align-items: center;
+
+  border-radius: 10px;
+  background: linear-gradient(90deg, #6366f1, #3b82f6);
+  color: #fff;
+
+  margin-bottom: 20px;      /* spacing from cards */
+}
+.support-tab {
+  display: block;
+}
+.create-ticket-btn {
+  align-self: flex-start;
+}
+

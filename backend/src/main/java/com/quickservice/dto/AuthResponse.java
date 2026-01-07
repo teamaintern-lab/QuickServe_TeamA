@@ -12,6 +12,9 @@ public class AuthResponse {
     private String category;
     private String customService;
 
+    private Double latitude;
+    private Double longitude;
+
     public AuthResponse() {}
 
     public AuthResponse(boolean success, String message) {
@@ -82,4 +85,21 @@ public class AuthResponse {
     public void setCustomService(String customService) {
         this.customService = customService;
     }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
 }

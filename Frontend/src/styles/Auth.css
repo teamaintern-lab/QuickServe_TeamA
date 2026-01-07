@@ -866,3 +866,63 @@ body {
 .otp-reset-btn:disabled {
   color: #ffffff;
 }
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 300px); /* same width for all cards */
+  justify-content: center;                 /* center the whole row */
+  gap: 30px;
+  margin-bottom: 30px;
+  animation: slideUp 0.6s ease-out;
+}
+.role-card {
+  height: 360px;            /* same height for all cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.role-card {
+  align-items: center;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .role-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .role-card {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 240px); /* 🔹 smaller width */
+  justify-content: center;                 /* center alignment */
+  gap: 24px;
+  margin-bottom: 30px;
+  animation: slideUp 0.6s ease-out;
+}
+.role-card {
+  height: 320px;          /* 🔹 smaller height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+.role-icon {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+@media (max-width: 900px) {
+  .role-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .role-card {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
+

@@ -1,6 +1,6 @@
 package com.quickservice.controller;
 
-import com.quickservice.model.User;
+
 import com.quickservice.model.ServiceItem;
 import com.quickservice.repository.UserRepository;
 import com.quickservice.repository.ServiceItemRepository;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController

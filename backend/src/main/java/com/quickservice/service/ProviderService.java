@@ -6,19 +6,25 @@ import com.quickservice.repository.BookingRepository;
 import com.quickservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ProviderService {
 
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public ProviderService(BookingRepository bookingRepository,
-                           UserRepository userRepository) {
+            UserRepository userRepository,
+            EmailService emailService) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     // =========================
@@ -28,7 +34,27 @@ public class ProviderService {
     // Fetch all bookings matching provider category
     public List<Booking> getProviderRequests(Long providerId) {
         User provider = getProvider(providerId);
-        return bookingRepository.findByServiceType(provider.getCategory());
+
+        // 1️⃣ Unassigned requests (category match)
+        List<Booking> requested = bookingRepository
+                .findByServiceTypeAndStatus(
+                        provider.getCategory(),
+                        "REQUESTED");
+
+        // 2️⃣ Assigned to this provider (only ACTIVE ones: REQUESTED, ACCEPTED,
+        // COMPLETED)
+        List<Booking> assigned = bookingRepository
+                .findByServiceId(providerId)
+                .stream()
+                .filter(b -> !b.getStatus().equals("DECLINED") && !b.getStatus().equals("CANCELLED"))
+                .toList();
+
+        // 3️⃣ Use a Set to merge and avoid duplicates (matched by booking ID)
+        // LinkedHashSet preserves insertion order
+        Set<Booking> uniqueRequests = new LinkedHashSet<>(requested);
+        uniqueRequests.addAll(assigned);
+
+        return new ArrayList<>(uniqueRequests);
     }
 
     public Booking acceptRequest(Long bookingId, Long providerId) {
@@ -39,19 +65,94 @@ public class ProviderService {
         b.setProviderName(getProviderName(providerId));
         b.setStatus("ACCEPTED");
 
-        return bookingRepository.save(b);
+        Booking acceptedBooking = bookingRepository.save(b);
+
+        // Send notification email to customer
+        try {
+            User customer = userRepository.findById(acceptedBooking.getUserId())
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                    .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + acceptedBooking.getBookingDateTime() +
+                    "\nAddress: " + acceptedBooking.getAddress() +
+                    "\nDescription: " + acceptedBooking.getDescription() +
+                    "\nAmount: ₹" + acceptedBooking.getAmount();
+
+            emailService.sendProviderResponseNotification(
+                    customer.getEmail(),
+                    provider.getFullName(),
+                    acceptedBooking.getServiceType(),
+                    bookingDetails,
+                    true // isAccepted
+            );
+        } catch (Exception e) {
+            // Log the error but don't fail the acceptance
+            System.err.println("Failed to send acceptance notification email: " + e.getMessage());
+        }
+
+        return acceptedBooking;
     }
 
     public Booking declineRequest(Long bookingId, Long providerId) {
         Booking b = getOwnedBooking(bookingId, providerId);
         b.setStatus("DECLINED");
-        return bookingRepository.save(b);
+
+        Booking declinedBooking = bookingRepository.save(b);
+
+        // Send notification email to customer
+        try {
+            User customer = userRepository.findById(declinedBooking.getUserId())
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                    .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + declinedBooking.getBookingDateTime() +
+                    "\nAddress: " + declinedBooking.getAddress() +
+                    "\nDescription: " + declinedBooking.getDescription() +
+                    "\nAmount: ₹" + declinedBooking.getAmount();
+
+            emailService.sendProviderResponseNotification(
+                    customer.getEmail(),
+                    provider.getFullName(),
+                    declinedBooking.getServiceType(),
+                    bookingDetails,
+                    false // isAccepted = false (declined)
+            );
+        } catch (Exception e) {
+            // Log the error but don't fail the decline
+            System.err.println("Failed to send decline notification email: " + e.getMessage());
+        }
+
+        return declinedBooking;
     }
 
     public Booking completeRequest(Long bookingId, Long providerId) {
         Booking b = getOwnedBooking(bookingId, providerId);
         b.setStatus("COMPLETED");
-        return bookingRepository.save(b);
+
+        Booking completedBooking = bookingRepository.save(b);
+
+        // Send completion notification email to customer
+        try {
+            User customer = userRepository.findById(completedBooking.getUserId())
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                    .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + completedBooking.getBookingDateTime() +
+                    "\nAddress: " + completedBooking.getAddress() +
+                    "\nDescription: " + completedBooking.getDescription() +
+                    "\nAmount: ₹" + completedBooking.getAmount();
+
+            emailService.sendCompletionNotification(customer.getEmail(), provider.getFullName(),
+                    completedBooking.getServiceType(), bookingDetails);
+        } catch (Exception e) {
+            // Log the error but don't fail the completion
+            System.err.println("Failed to send completion notification email: " + e.getMessage());
+        }
+
+        return completedBooking;
     }
 
     // =========================
@@ -75,29 +176,27 @@ public class ProviderService {
 
     public User updateProviderProfile(Long providerId, Map<String, Object> body) {
 
-    User user = userRepository.findById(providerId)
-            .orElseThrow(() -> new RuntimeException("Provider not found"));
+        User user = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
 
-    if (body.containsKey("fullName"))
-        user.setFullName(body.get("fullName").toString());
+        if (body.containsKey("fullName"))
+            user.setFullName(body.get("fullName").toString());
 
-    if (body.containsKey("category"))
-        user.setCategory(body.get("category").toString());
+        if (body.containsKey("category"))
+            user.setCategory(body.get("category").toString());
 
-    if (body.containsKey("customService"))
-        user.setCustomService(body.get("customService").toString());
+        if (body.containsKey("customService"))
+            user.setCustomService(body.get("customService").toString());
 
-    if (body.containsKey("experience"))
-        user.setExperience(
-                Integer.parseInt(body.get("experience").toString())
-        );
+        if (body.containsKey("experience"))
+            user.setExperience(
+                    Integer.parseInt(body.get("experience").toString()));
 
-    if (body.containsKey("phone"))
-        user.setPhone(body.get("phone").toString());
+        if (body.containsKey("phone"))
+            user.setPhone(body.get("phone").toString());
 
-    return userRepository.save(user);
-}
-
+        return userRepository.save(user);
+    }
 
     // =========================
     // INTERNAL HELPERS
@@ -126,33 +225,34 @@ public class ProviderService {
                 .map(User::getFullName)
                 .orElse("Unknown Provider");
     }
+
     public Map<String, Object> getEarnings(Long providerId) {
 
-    List<Booking> completed = bookingRepository
-            .findByServiceIdAndStatus(providerId, "COMPLETED");
+        List<Booking> completed = bookingRepository
+                .findByServiceIdAndStatus(providerId, "COMPLETED");
 
-    List<Booking> accepted = bookingRepository
-            .findByServiceIdAndStatus(providerId, "ACCEPTED");
+        List<Booking> accepted = bookingRepository
+                .findByServiceIdAndStatus(providerId, "ACCEPTED");
 
-    double total = completed.stream()
-            .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
-            .sum();
+        double total = completed.stream()
+                .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
+                .sum();
 
-    double pending = accepted.stream()
-            .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
-            .sum();
+        double pending = accepted.stream()
+                .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
+                .sum();
 
-    double avg = completed.isEmpty() ? 0 : total / completed.size();
+        double avg = completed.isEmpty() ? 0 : total / completed.size();
 
-    return Map.of(
-            "total", total,
-            "pending", pending,
-            "avg", Math.round(avg),
-            "completedCount", completed.size()
-    );
-}
-public List<Booking> getCompletedServices(Long providerId) {
-    return bookingRepository.findByServiceIdAndStatus(providerId, "COMPLETED");
-}
+        return Map.of(
+                "total", total,
+                "pending", pending,
+                "avg", Math.round(avg),
+                "completedCount", completed.size());
+    }
+
+    public List<Booking> getCompletedServices(Long providerId) {
+        return bookingRepository.findByServiceIdAndStatus(providerId, "COMPLETED");
+    }
 
 }
