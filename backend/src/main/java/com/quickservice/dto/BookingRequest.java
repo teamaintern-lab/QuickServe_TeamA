@@ -11,7 +11,11 @@ public class BookingRequest {
     private Long providerId;        // maps to service_id column
     private String providerName;
     private String phone;
+<<<<<<< HEAD
     private Double amount;
+=======
+    private Double customerEstimatedPrice;
+>>>>>>> 7e6c529 (final updated code)
     private Double customerLatitude;
     private Double customerLongitude;
     private Double providerLatitude;
@@ -38,8 +42,8 @@ public class BookingRequest {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    public Double getCustomerEstimatedPrice() { return customerEstimatedPrice; }
+    public void setCustomerEstimatedPrice(Double customerEstimatedPrice) { this.customerEstimatedPrice = customerEstimatedPrice; }
      public Long getProviderId() { return providerId; }
     public void setProviderId(Long providerId) { this.providerId = providerId; }
 

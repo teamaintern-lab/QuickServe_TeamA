@@ -26,7 +26,10 @@ public class EmailService {
         mailSender.send(msg);
     }
 
+<<<<<<< HEAD
     @Async
+=======
+>>>>>>> 7e6c529 (final updated code)
     public void sendBookingNotification(String providerEmail, String customerName, String serviceType, String bookingDetails, boolean isNewBooking) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(providerEmail);
@@ -54,7 +57,10 @@ public class EmailService {
         mailSender.send(msg);
     }
 
+<<<<<<< HEAD
     @Async
+=======
+>>>>>>> 7e6c529 (final updated code)
     public void sendProviderResponseNotification(String customerEmail, String providerName, String serviceType, String bookingDetails, boolean isAccepted) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(customerEmail);
@@ -82,7 +88,10 @@ public class EmailService {
         mailSender.send(msg);
     }
 
+<<<<<<< HEAD
     @Async
+=======
+>>>>>>> 7e6c529 (final updated code)
     public void sendCompletionNotification(String customerEmail, String providerName, String serviceType, String bookingDetails) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(customerEmail);

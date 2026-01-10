@@ -93,7 +93,11 @@ useEffect(() => {
     const pending = data.filter(r => r.status === "REQUESTED");
 
     const totalEarnings = completedJobs.reduce(
+<<<<<<< HEAD
       (sum, r) => sum + (r.amount || 0),
+=======
+      (sum, r) => sum + (r.finalAmount || r.amount || 0),
+>>>>>>> 7e6c529 (final updated code)
       0
     );
 

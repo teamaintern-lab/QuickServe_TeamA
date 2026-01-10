@@ -8,7 +8,10 @@ import CustomerDashboard from "./components/CustomerDashboard";
 import ProviderDashboard from "./components/ProviderDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import ForgotPassword from "./components/ForgotPassword";
+<<<<<<< HEAD
 import { getSession } from "./services/api";
+=======
+>>>>>>> 7e6c529 (final updated code)
 import "leaflet/dist/leaflet.css";
 
 export default function App() {

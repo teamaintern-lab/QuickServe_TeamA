@@ -104,7 +104,7 @@ export default function CustomerCompleted() {
             </div>
 
             <p className="completed-meta">
-              {b.bookingDateTime} • ₹{b.amount}
+              {b.bookingDateTime} • ₹{b.finalAmount || b.amount || 0}
             </p>
 
             {editingId === b.id ? (

@@ -168,7 +168,10 @@ export default function CustomerDashboard({ user, onLogout, onUpdateUser }) {
                   </span>
 
                   <p>📅 {b.bookingDateTime || "Not Selected"}</p>
-                  <p>💰 ₹{b.amount || 0}</p>
+                  {b.customerEstimatedPrice && <p>💰 Your Estimate: ₹{b.customerEstimatedPrice}</p>}
+                  {b.providerEstimatedPrice && <p>💰 Provider Estimate: ₹{b.providerEstimatedPrice}</p>}
+                  {b.finalAmount && <p>💰 Final Amount: ₹{b.finalAmount}</p>}
+                  {!b.customerEstimatedPrice && !b.providerEstimatedPrice && !b.finalAmount && <p>💰 Amount: ₹{b.amount || 0}</p>}
                   <p>🏢 {b.providerName || "Pending Assignment"}</p>
 
                   <button
@@ -354,7 +357,10 @@ function BookingDetailsModal({ booking, onClose }) {
         )}
 <div className="details-row"><span>Description</span><strong>{booking.description}</strong></div>
           <div className="details-row"><span>Phone</span><strong>{booking.phone}</strong></div>
-          <div className="details-row"><span>Amount</span><strong>₹{booking.amount || 0}</strong></div>
+          {booking.customerEstimatedPrice && <div className="details-row"><span>Your Estimate</span><strong>₹{booking.customerEstimatedPrice}</strong></div>}
+          {booking.providerEstimatedPrice && <div className="details-row"><span>Provider Estimate</span><strong>₹{booking.providerEstimatedPrice}</strong></div>}
+          {booking.finalAmount && <div className="details-row"><span>Final Amount</span><strong>₹{booking.finalAmount}</strong></div>}
+          {!booking.customerEstimatedPrice && !booking.providerEstimatedPrice && !booking.finalAmount && <div className="details-row"><span>Amount</span><strong>₹{booking.amount || 0}</strong></div>}
         </div>
 
         <div className="details-footer">

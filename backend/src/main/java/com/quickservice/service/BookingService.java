@@ -26,6 +26,7 @@ public class BookingService {
 
     // Create new booking
     public Booking createBooking(Long userId, BookingRequest req) {
+<<<<<<< HEAD
         // Prevent duplicate bookings (e.g., within 2 minutes for same provider and service)
         List<Booking> recentBookings = bookingRepository.findByUserIdOrderByIdDesc(userId);
         if (!recentBookings.isEmpty()) {
@@ -49,6 +50,12 @@ public class BookingService {
                 }
             }
         }
+=======
+        System.out.println("Creating booking for user: " + userId);
+        System.out.println("BookingRequest - serviceType: " + req.getServiceType());
+        System.out.println("BookingRequest - bookingDateTime: " + req.getBookingDateTime());
+        System.out.println("BookingRequest - providerId: " + req.getProviderId());
+>>>>>>> 7e6c529 (final updated code)
 
         Booking b = new Booking();
 
@@ -59,7 +66,11 @@ public class BookingService {
         b.setDescription(req.getDescription());
         b.setPhone(req.getPhone());
         b.setBookingDateTime(req.getBookingDateTime());
+<<<<<<< HEAD
         b.setAmount(req.getAmount());
+=======
+        b.setCustomerEstimatedPrice(req.getCustomerEstimatedPrice());
+>>>>>>> 7e6c529 (final updated code)
 
         // ===== LOCATION SNAPSHOT =====
         b.setCustomerLatitude(req.getCustomerLatitude());
@@ -67,6 +78,7 @@ public class BookingService {
 
         // Default state
         b.setStatus("REQUESTED");
+<<<<<<< HEAD
         b.setProviderName("Pending Assignment");
 
         // ===== DISTANCE-BASED MATCHING =====
@@ -86,6 +98,40 @@ public class BookingService {
                 b.setProviderName(nearest.getFullName());
                 b.setProviderLatitude(nearest.getLatitude());
                 b.setProviderLongitude(nearest.getLongitude());
+=======
+
+        // ===== USE SELECTED PROVIDER =====
+        if (req.getProviderId() != null) {
+            User provider = userService.findById(req.getProviderId())
+                .orElseThrow(() -> new IllegalArgumentException("Selected provider not found"));
+
+            b.setProviderId(req.getProviderId());
+            b.setServiceId(req.getProviderId()); // Keep serviceId for backward compatibility
+            b.setProviderName(provider.getFullName());
+            b.setProviderLatitude(provider.getLatitude());
+            b.setProviderLongitude(provider.getLongitude());
+        } else {
+            // Fallback to distance-based matching if no provider selected
+            b.setProviderName("Pending Assignment");
+
+            if (req.getCustomerLatitude() != null && req.getCustomerLongitude() != null) {
+                List<User> nearbyProviders =
+                        userService.findNearestProviders(
+                                req.getCustomerLatitude(),
+                                req.getCustomerLongitude(),
+                                10.0 // 10 KM radius
+                        );
+
+                if (!nearbyProviders.isEmpty()) {
+                    User nearest = nearbyProviders.get(0);
+
+                    b.setProviderId(nearest.getId());
+                    b.setServiceId(nearest.getId());
+                    b.setProviderName(nearest.getFullName());
+                    b.setProviderLatitude(nearest.getLatitude());
+                    b.setProviderLongitude(nearest.getLongitude());
+                }
+>>>>>>> 7e6c529 (final updated code)
             }
         }
 

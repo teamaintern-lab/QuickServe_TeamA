@@ -50,14 +50,14 @@ export const getProviderCalendar = () =>
 export const getProviderRequests = () =>
   api.get("/provider/requests");
 
-export const acceptRequest = (id) =>
-  api.put(`/provider/requests/${id}/accept`);
+export const acceptRequest = (id, providerEstimatedPrice) =>
+  api.put(`/provider/requests/${id}/accept`, { providerEstimatedPrice });
 
 export const declineRequest = (id) =>
   api.put(`/provider/requests/${id}/decline`);
 
-export const completeRequest = (id) =>
-  api.put(`/provider/requests/${id}/complete`);
+export const completeRequest = (id, finalAmount) =>
+  api.put(`/provider/requests/${id}/complete`, { finalAmount });
 
 export const getProviderProfile = () =>
   api.get("/provider/profile");
@@ -121,8 +121,13 @@ export const getLiveLocation = (bookingId) =>
 /* ===============================
    CHAT
 ================================ */
+<<<<<<< HEAD
 export const sendChatMessage = (bookingId, message, senderId) =>
   api.post(`/chat/bookings/${bookingId}/messages`, { message, senderId });
+=======
+export const sendChatMessage = (bookingId, message) =>
+  api.post(`/chat/bookings/${bookingId}/messages`, { message });
+>>>>>>> 7e6c529 (final updated code)
 
 export const getChatMessages = (bookingId) =>
   api.get(`/chat/bookings/${bookingId}/messages`);

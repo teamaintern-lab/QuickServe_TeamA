@@ -20,8 +20,13 @@ public class ProviderService {
     private final EmailService emailService;
 
     public ProviderService(BookingRepository bookingRepository,
+<<<<<<< HEAD
             UserRepository userRepository,
             EmailService emailService) {
+=======
+                           UserRepository userRepository,
+                           EmailService emailService) {
+>>>>>>> 7e6c529 (final updated code)
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -39,6 +44,7 @@ public class ProviderService {
         List<Booking> requested = bookingRepository
                 .findByServiceTypeAndStatus(
                         provider.getCategory(),
+<<<<<<< HEAD
                         "REQUESTED");
 
         // 2️⃣ Assigned to this provider (only ACTIVE ones: REQUESTED, ACCEPTED,
@@ -55,14 +61,29 @@ public class ProviderService {
         uniqueRequests.addAll(assigned);
 
         return new ArrayList<>(uniqueRequests);
+=======
+                        "REQUESTED"
+                );
+
+        // 2️⃣ Assigned to this provider (ACCEPTED + COMPLETED)
+        List<Booking> assigned = bookingRepository
+                .findByServiceId(providerId);
+
+        // 3️⃣ Merge both
+        requested.addAll(assigned);
+
+        return requested;
+>>>>>>> 7e6c529 (final updated code)
     }
 
-    public Booking acceptRequest(Long bookingId, Long providerId) {
+
+    public Booking acceptRequest(Long bookingId, Long providerId, Double providerEstimatedPrice) {
         Booking b = getBooking(bookingId);
 
         // assign provider on accept
         b.setServiceId(providerId);
         b.setProviderName(getProviderName(providerId));
+        b.setProviderEstimatedPrice(providerEstimatedPrice);
         b.setStatus("ACCEPTED");
 
         Booking acceptedBooking = bookingRepository.save(b);
@@ -70,6 +91,7 @@ public class ProviderService {
         // Send notification email to customer
         try {
             User customer = userRepository.findById(acceptedBooking.getUserId())
+<<<<<<< HEAD
                     .orElseThrow(() -> new RuntimeException("Customer not found"));
             User provider = userRepository.findById(providerId)
                     .orElseThrow(() -> new RuntimeException("Provider not found"));
@@ -85,6 +107,29 @@ public class ProviderService {
                     acceptedBooking.getServiceType(),
                     bookingDetails,
                     true // isAccepted
+=======
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + acceptedBooking.getBookingDateTime() +
+                                  "\nAddress: " + acceptedBooking.getAddress() +
+                                  "\nDescription: " + acceptedBooking.getDescription();
+            
+            if (acceptedBooking.getCustomerEstimatedPrice() != null) {
+                bookingDetails += "\nCustomer Estimated Price: ₹" + acceptedBooking.getCustomerEstimatedPrice();
+            }
+            if (acceptedBooking.getProviderEstimatedPrice() != null) {
+                bookingDetails += "\nProvider Estimated Price: ₹" + acceptedBooking.getProviderEstimatedPrice();
+            }
+
+            emailService.sendProviderResponseNotification(
+                customer.getEmail(),
+                provider.getFullName(),
+                acceptedBooking.getServiceType(),
+                bookingDetails,
+                true // isAccepted
+>>>>>>> 7e6c529 (final updated code)
             );
         } catch (Exception e) {
             // Log the error but don't fail the acceptance
@@ -103,6 +148,7 @@ public class ProviderService {
         // Send notification email to customer
         try {
             User customer = userRepository.findById(declinedBooking.getUserId())
+<<<<<<< HEAD
                     .orElseThrow(() -> new RuntimeException("Customer not found"));
             User provider = userRepository.findById(providerId)
                     .orElseThrow(() -> new RuntimeException("Provider not found"));
@@ -118,6 +164,23 @@ public class ProviderService {
                     declinedBooking.getServiceType(),
                     bookingDetails,
                     false // isAccepted = false (declined)
+=======
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + declinedBooking.getBookingDateTime() +
+                                  "\nAddress: " + declinedBooking.getAddress() +
+                                  "\nDescription: " + declinedBooking.getDescription() +
+                                  "\nAmount: ₹" + declinedBooking.getAmount();
+
+            emailService.sendProviderResponseNotification(
+                customer.getEmail(),
+                provider.getFullName(),
+                declinedBooking.getServiceType(),
+                bookingDetails,
+                false // isAccepted = false (declined)
+>>>>>>> 7e6c529 (final updated code)
             );
         } catch (Exception e) {
             // Log the error but don't fail the decline
@@ -127,8 +190,9 @@ public class ProviderService {
         return declinedBooking;
     }
 
-    public Booking completeRequest(Long bookingId, Long providerId) {
+    public Booking completeRequest(Long bookingId, Long providerId, Double finalAmount) {
         Booking b = getOwnedBooking(bookingId, providerId);
+        b.setFinalAmount(finalAmount);
         b.setStatus("COMPLETED");
 
         Booking completedBooking = bookingRepository.save(b);
@@ -136,6 +200,7 @@ public class ProviderService {
         // Send completion notification email to customer
         try {
             User customer = userRepository.findById(completedBooking.getUserId())
+<<<<<<< HEAD
                     .orElseThrow(() -> new RuntimeException("Customer not found"));
             User provider = userRepository.findById(providerId)
                     .orElseThrow(() -> new RuntimeException("Provider not found"));
@@ -147,6 +212,27 @@ public class ProviderService {
 
             emailService.sendCompletionNotification(customer.getEmail(), provider.getFullName(),
                     completedBooking.getServiceType(), bookingDetails);
+=======
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + completedBooking.getBookingDateTime() +
+                                  "\nAddress: " + completedBooking.getAddress() +
+                                  "\nDescription: " + completedBooking.getDescription();
+            
+            if (completedBooking.getCustomerEstimatedPrice() != null) {
+                bookingDetails += "\nCustomer Estimated Price: ₹" + completedBooking.getCustomerEstimatedPrice();
+            }
+            if (completedBooking.getProviderEstimatedPrice() != null) {
+                bookingDetails += "\nProvider Estimated Price: ₹" + completedBooking.getProviderEstimatedPrice();
+            }
+            if (completedBooking.getFinalAmount() != null) {
+                bookingDetails += "\nFinal Amount: ₹" + completedBooking.getFinalAmount();
+            }
+
+            emailService.sendCompletionNotification(customer.getEmail(), provider.getFullName(), completedBooking.getServiceType(), bookingDetails);
+>>>>>>> 7e6c529 (final updated code)
         } catch (Exception e) {
             // Log the error but don't fail the completion
             System.err.println("Failed to send completion notification email: " + e.getMessage());

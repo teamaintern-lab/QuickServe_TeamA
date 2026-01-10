@@ -80,7 +80,11 @@ export default function ProviderCalendar({ requests = [] }) {
             <p><strong>Date:</strong> {selectedEvent.date}</p>
             <p><strong>Time:</strong> {selectedEvent.time}</p>
             <p><strong>Address:</strong> {selectedEvent.address}</p>
-            <p><strong>Amount:</strong> ₹{selectedEvent.amount}</p>
+            {selectedEvent.description && <p><strong>Description:</strong> {selectedEvent.description}</p>}
+            {selectedEvent.customerEstimatedPrice && <p><strong>Customer Estimate:</strong> ₹{selectedEvent.customerEstimatedPrice}</p>}
+            {selectedEvent.providerEstimatedPrice && <p><strong>Your Estimate:</strong> ₹{selectedEvent.providerEstimatedPrice}</p>}
+            {selectedEvent.finalAmount && <p><strong>Final Amount:</strong> ₹{selectedEvent.finalAmount}</p>}
+            {!selectedEvent.customerEstimatedPrice && !selectedEvent.providerEstimatedPrice && !selectedEvent.finalAmount && <p><strong>Amount:</strong> ₹{selectedEvent.amount}</p>}
             <p><strong>Status:</strong> {selectedEvent.status}</p>
 
             <button

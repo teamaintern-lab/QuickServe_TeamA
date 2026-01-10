@@ -18,7 +18,9 @@ export default function ProviderRequests({ requests, onRefresh, onSelect, onChat
   };
 
   const handleAccept = async (id) => {
-    await acceptRequest(id);
+    const providerEstimatedPrice = prompt("Enter your estimated price (₹) - optional:");
+    const price = providerEstimatedPrice ? parseFloat(providerEstimatedPrice) : null;
+    await acceptRequest(id, price);
     onRefresh();
   };
 
@@ -28,7 +30,12 @@ export default function ProviderRequests({ requests, onRefresh, onSelect, onChat
   };
 
   const handleComplete = async (id) => {
-    await completeRequest(id);
+    const finalAmount = prompt("Enter the final amount (₹) - required:");
+    if (!finalAmount || isNaN(parseFloat(finalAmount))) {
+      alert("Please enter a valid final amount.");
+      return;
+    }
+    await completeRequest(id, parseFloat(finalAmount));
     onRefresh();
   };
 
@@ -61,7 +68,11 @@ export default function ProviderRequests({ requests, onRefresh, onSelect, onChat
               {/* DETAILS */}
               <p>📍 {req.address}</p>
               <p>📅 {req.bookingDateTime}</p>
-              <p>💰 ₹{req.amount}</p>
+              {req.description && <p>📝 {req.description}</p>}
+              {req.customerEstimatedPrice && <p>💰 Customer Estimate: ₹{req.customerEstimatedPrice}</p>}
+              {req.providerEstimatedPrice && <p>💰 Your Estimate: ₹{req.providerEstimatedPrice}</p>}
+              {req.finalAmount && <p>💰 Final Amount: ₹{req.finalAmount}</p>}
+              {!req.customerEstimatedPrice && !req.providerEstimatedPrice && !req.finalAmount && <p>💰 Amount: ₹{req.amount || 0}</p>}
 
               {/* ACTIONS */}
               {req.status === "REQUESTED" && (
