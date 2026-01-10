@@ -1,1 +1,0 @@
-# QuickServe_TeamA
