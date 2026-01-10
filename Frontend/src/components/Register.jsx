@@ -229,7 +229,7 @@ const handleSubmit = async (e) => {
          className="submit-btn register-btn"
          onClick={handleGenerateOtp}
          disabled={
-           emailVerified ||          // ✅ ADD THIS
+           emailVerified ||        
            !formData.email ||
            errors.email ||
            sendingOtp ||

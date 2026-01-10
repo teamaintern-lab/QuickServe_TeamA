@@ -2,6 +2,7 @@ package com.quickservice.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(name = "bookings")
@@ -9,13 +10,13 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;   // REAL PRIMARY KEY
+    private Long id; // REAL PRIMARY KEY
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;  // just store the ID, not the user object
+    private Long userId; // just store the ID, not the user object
 
     @Column(nullable = true)
-    private Long serviceId;   // you are not using ServiceItem now
+    private Long serviceId; // you are not using ServiceItem now
 
     @Column(nullable = true)
     private String serviceType;
@@ -31,7 +32,7 @@ public class Booking {
 
     private String phone;
 
-    private String bookingDateTime;  // date + time combined
+    private String bookingDateTime; // date + time combined
 
     private String status = "REQUESTED";
 
@@ -47,51 +48,186 @@ public class Booking {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt = Instant.now();
 
+    // Customer location snapshot
+    @Column(name = "customer_latitude")
+    private Double customerLatitude;
+
+    @Column(name = "customer_longitude")
+    private Double customerLongitude;
+
+    // Provider location snapshot
+    @Column(name = "provider_latitude")
+    private Double providerLatitude;
+
+    @Column(name = "provider_longitude")
+    private Double providerLongitude;
 
     // Getters & Setters
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getServiceId() { return serviceId; }
-    public void setServiceId(Long serviceId) { this.serviceId = serviceId; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public String getServiceType() { return serviceType; }
-    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-    public String getUrgency() { return urgency; }
-    public void setUrgency(String urgency) { this.urgency = urgency; }
+    public Long getServiceId() {
+        return serviceId;
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getServiceType() {
+        return serviceType;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
 
-    public String getBookingDateTime() { return bookingDateTime; }
-    public void setBookingDateTime(String bookingDateTime) { this.bookingDateTime = bookingDateTime; }
+    public String getUrgency() {
+        return urgency;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setUrgency(String urgency) {
+        this.urgency = urgency;
+    }
 
-    public Integer getRating() { return rating; }
-    public void setRating(Integer rating) { this.rating = rating; }
+    public String getAddress() {
+        return address;
+    }
 
-    public String getReview() { return review; }
-    public void setReview(String review) { this.review = review; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public String getProviderName() { return providerName; }
-    public void setProviderName(String providerName) { this.providerName = providerName; }
+    public String getDescription() {
+        return description;
+    }
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public Instant getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getBookingDateTime() {
+        return bookingDateTime;
+    }
+
+    public void setBookingDateTime(String bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Double getCustomerLatitude() {
+        return customerLatitude;
+    }
+
+    public void setCustomerLatitude(Double customerLatitude) {
+        this.customerLatitude = customerLatitude;
+    }
+
+    public Double getCustomerLongitude() {
+        return customerLongitude;
+    }
+
+    public void setCustomerLongitude(Double customerLongitude) {
+        this.customerLongitude = customerLongitude;
+    }
+
+    public Double getProviderLatitude() {
+        return providerLatitude;
+    }
+
+    public void setProviderLatitude(Double providerLatitude) {
+        this.providerLatitude = providerLatitude;
+    }
+
+    public Double getProviderLongitude() {
+        return providerLongitude;
+    }
+
+    public void setProviderLongitude(Double providerLongitude) {
+        this.providerLongitude = providerLongitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(id, booking.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

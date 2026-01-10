@@ -4,45 +4,123 @@ import com.quickservice.dto.BookingRequest;
 import com.quickservice.model.Booking;
 import com.quickservice.repository.BookingRepository;
 import org.springframework.stereotype.Service;
+import com.quickservice.model.User;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+    private final UserService userService;
+    private final EmailService emailService;
 
-    public BookingService(BookingRepository bookingRepository) {
+    public BookingService(BookingRepository bookingRepository, UserService userService, EmailService emailService) {
         this.bookingRepository = bookingRepository;
+        this.userService = userService;
+        this.emailService = emailService;
     }
+
 
     // Create new booking
     public Booking createBooking(Long userId, BookingRequest req) {
+        // Prevent duplicate bookings (e.g., within 2 minutes for same provider and service)
+        List<Booking> recentBookings = bookingRepository.findByUserIdOrderByIdDesc(userId);
+        if (!recentBookings.isEmpty()) {
+            Booking lastBooking = recentBookings.get(0);
+            
+            // Basic check: same service type and provider
+            boolean sameService = lastBooking.getServiceType().equals(req.getServiceType());
+            boolean sameProvider = (lastBooking.getServiceId() != null && req.getProviderId() != null && 
+                                    lastBooking.getServiceId().equals(Long.valueOf(req.getProviderId())));
+            
+            if (sameService && sameProvider) {
+                // Time check (within 2 minutes)
+                try {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    LocalDateTime lastTime = LocalDateTime.parse(lastBooking.getBookingDateTime(), formatter);
+                    if (lastTime.isAfter(LocalDateTime.now().minusMinutes(2))) {
+                        throw new IllegalArgumentException("A similar booking request was recently made. Please wait 2 minutes.");
+                    }
+                } catch (Exception e) {
+                    // Fallback or log error
+                }
+            }
+        }
 
-    Booking b = new Booking();
+        Booking b = new Booking();
 
-    // REQUIRED: assign user ID
-    b.setUserId(userId);
+        b.setUserId(userId);
+        b.setServiceType(req.getServiceType());
+        b.setUrgency(req.getUrgency());
+        b.setAddress(req.getAddress());
+        b.setDescription(req.getDescription());
+        b.setPhone(req.getPhone());
+        b.setBookingDateTime(req.getBookingDateTime());
+        b.setAmount(req.getAmount());
 
-    // Optional fields from frontend
-    b.setServiceType(req.getServiceType());
-    b.setUrgency(req.getUrgency());
-    b.setAddress(req.getAddress());
-    b.setDescription(req.getDescription());
-    b.setPhone(req.getPhone());
-    b.setServiceId(req.getProviderId());         // save providerId in service_id column
-    b.setProviderName(req.getProviderName());
-    b.setBookingDateTime(req.getBookingDateTime());
-    b.setAmount(req.getAmount());
+        // ===== LOCATION SNAPSHOT =====
+        b.setCustomerLatitude(req.getCustomerLatitude());
+        b.setCustomerLongitude(req.getCustomerLongitude());
 
-    // Defaults
-    if (b.getStatus() == null) b.setStatus("REQUESTED");
-    if (b.getProviderName() == null) b.setProviderName("Pending Assignment");
-b.setProviderName(req.getProviderName());
-b.setServiceId(req.getProviderId());  // use existing column
+        // Default state
+        b.setStatus("REQUESTED");
+        b.setProviderName("Pending Assignment");
 
-    return bookingRepository.save(b);
-}
+        // ===== DISTANCE-BASED MATCHING =====
+        if (req.getCustomerLatitude() != null && req.getCustomerLongitude() != null) {
+
+            List<User> nearbyProviders =
+                    userService.findNearestProviders(
+                            req.getCustomerLatitude(),
+                            req.getCustomerLongitude(),
+                            10.0 // 10 KM radius
+                    );
+
+            if (!nearbyProviders.isEmpty()) {
+                User nearest = nearbyProviders.get(0);
+
+                b.setServiceId(nearest.getId());
+                b.setProviderName(nearest.getFullName());
+                b.setProviderLatitude(nearest.getLatitude());
+                b.setProviderLongitude(nearest.getLongitude());
+            }
+        }
+
+        Booking savedBooking = bookingRepository.save(b);
+
+        // Send notification email to provider if one was assigned
+        if (savedBooking.getServiceId() != null) {
+            try {
+                User customer = userService.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                User provider = userService.findById(savedBooking.getServiceId())
+                    .orElseThrow(() -> new IllegalArgumentException("Provider not found"));
+
+                String bookingDetails = "Date: " + savedBooking.getBookingDateTime() +
+                                      "\nAddress: " + savedBooking.getAddress() +
+                                      "\nDescription: " + savedBooking.getDescription() +
+                                      "\nAmount: ₹" + savedBooking.getAmount();
+
+                emailService.sendBookingNotification(
+                    provider.getEmail(),
+                    customer.getFullName(),
+                    savedBooking.getServiceType(),
+                    bookingDetails,
+                    true // isNewBooking
+                );
+            } catch (Exception e) {
+                // Log the error but don't fail the booking creation
+                System.err.println("Failed to send booking notification email: " + e.getMessage());
+            }
+        }
+
+        return savedBooking;
+    }
+
+
     // Fetch all bookings belonging to the user
     public List<Booking> getBookingsForUser(Long userId) {
         return bookingRepository.findByUserIdOrderByIdDesc(userId);
@@ -63,7 +141,35 @@ b.setServiceId(req.getProviderId());  // use existing column
         }
 
         b.setStatus("CANCELLED");
-        return bookingRepository.save(b);
+        Booking cancelledBooking = bookingRepository.save(b);
+
+        // Send cancellation notification email to provider if one was assigned
+        if (cancelledBooking.getServiceId() != null) {
+            try {
+                User customer = userService.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                User provider = userService.findById(cancelledBooking.getServiceId())
+                    .orElseThrow(() -> new IllegalArgumentException("Provider not found"));
+
+                String bookingDetails = "Date: " + cancelledBooking.getBookingDateTime() +
+                                      "\nAddress: " + cancelledBooking.getAddress() +
+                                      "\nDescription: " + cancelledBooking.getDescription() +
+                                      "\nAmount: ₹" + cancelledBooking.getAmount();
+
+                emailService.sendBookingNotification(
+                    provider.getEmail(),
+                    customer.getFullName(),
+                    cancelledBooking.getServiceType(),
+                    bookingDetails,
+                    false // isNewBooking = false (cancellation)
+                );
+            } catch (Exception e) {
+                // Log the error but don't fail the cancellation
+                System.err.println("Failed to send cancellation notification email: " + e.getMessage());
+            }
+        }
+
+        return cancelledBooking;
     }
 
     // Completed bookings for a user

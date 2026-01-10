@@ -3,6 +3,7 @@ package com.quickservice.controller;
 import com.quickservice.dto.BookingRequest;
 import com.quickservice.dto.BookingResponse;
 import com.quickservice.model.Booking;
+import com.quickservice.model.User;
 import com.quickservice.service.BookingService;
 import com.quickservice.service.AuthService;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,6 +21,7 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final AuthService authService;
+
 
     public BookingController(BookingService bookingService, AuthService authService) {
         this.bookingService = bookingService;
@@ -145,7 +148,32 @@ public class BookingController {
     r.setReview(b.getReview());
     r.setProviderName(b.getProviderName());
     r.setAmount(b.getAmount());
-    return r;
+       r.setCustomerLatitude(b.getCustomerLatitude());
+       r.setCustomerLongitude(b.getCustomerLongitude());
+       r.setProviderLatitude(b.getProviderLatitude());
+       r.setProviderLongitude(b.getProviderLongitude());
+
+       // Get customer name
+       try {
+           Optional<User> customerOpt = authService.findById(b.getUserId());
+           r.setCustomerName(customerOpt.map(User::getFullName).orElse("Unknown Customer"));
+       } catch (Exception e) {
+           r.setCustomerName("Unknown Customer");
+       }
+
+       // Get provider email if provider is assigned
+       if (b.getServiceId() != null) {
+           try {
+               Optional<User> providerOpt = authService.findById(b.getServiceId());
+               r.setProviderEmail(providerOpt.map(User::getEmail).orElse(null));
+           } catch (Exception e) {
+               r.setProviderEmail(null);
+           }
+       } else {
+           r.setProviderEmail(null);
+       }
+
+       return r;
 }
 
 }

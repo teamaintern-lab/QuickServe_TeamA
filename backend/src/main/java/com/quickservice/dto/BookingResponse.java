@@ -16,7 +16,14 @@ public class BookingResponse {
     private Integer rating;
     private String review;
     private String providerName;
+    private String providerEmail;
+    private String customerName;
     private Double amount;
+
+    private Double customerLatitude;
+    private Double customerLongitude;
+    private Double providerLatitude;
+    private Double providerLongitude;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -57,6 +64,45 @@ public class BookingResponse {
     public String getProviderName() { return providerName; }
     public void setProviderName(String providerName) { this.providerName = providerName; }
 
+    public String getProviderEmail() { return providerEmail; }
+    public void setProviderEmail(String providerEmail) { this.providerEmail = providerEmail; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
     public Double getAmount() { return amount; }
     public void setAmount(Double amount) { this.amount = amount; }
+
+    public Double getCustomerLatitude() {
+        return customerLatitude;
+    }
+
+    public void setCustomerLatitude(Double customerLatitude) {
+        this.customerLatitude = customerLatitude;
+    }
+
+    public Double getCustomerLongitude() {
+        return customerLongitude;
+    }
+
+    public void setCustomerLongitude(Double customerLongitude) {
+        this.customerLongitude = customerLongitude;
+    }
+
+    public Double getProviderLatitude() {
+        return providerLatitude;
+    }
+
+    public void setProviderLatitude(Double providerLatitude) {
+        this.providerLatitude = providerLatitude;
+    }
+
+    public Double getProviderLongitude() {
+        return providerLongitude;
+    }
+
+    public void setProviderLongitude(Double providerLongitude) {
+        this.providerLongitude = providerLongitude;
+    }
+
 }

@@ -49,20 +49,6 @@ export default function RoleSelector({ onSelectRole, onRegister, onBack }) {
             </div>
           </div>
 
-          {/* ADMIN CARD */}
-          <div className="role-card admin-card">
-            <div className="role-icon">🛡️</div>
-            <h2 className="role-card-title">Administrator</h2>
-            <p className="role-card-desc">System configuration & oversight</p>
-            <div className="role-card-actions">
-              <button
-                onClick={() => onSelectRole("admin")}
-                className="role-btn admin-btn"
-              >
-                Admin Login
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* REGISTER LINK */}
