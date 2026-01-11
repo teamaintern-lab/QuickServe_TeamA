@@ -43,11 +43,22 @@ public class ProviderController {
     }
 
     @PutMapping("/requests/{id}/accept")
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    public ResponseEntity<?> accept(@PathVariable Long id, HttpSession session) {
+        Booking booking = providerService.acceptRequest(id, providerId(session));
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public ResponseEntity<?> accept(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body, HttpSession session) {
         Double providerEstimatedPrice = body != null && body.get("providerEstimatedPrice") != null
             ? ((Number) body.get("providerEstimatedPrice")).doubleValue()
             : null;
         Booking booking = providerService.acceptRequest(id, providerId(session), providerEstimatedPrice);
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
         return ResponseEntity.ok(toDTO(booking));
     }
 
@@ -58,9 +69,20 @@ public class ProviderController {
     }
 
     @PutMapping("/requests/{id}/complete")
+<<<<<<< HEAD
     public ResponseEntity<?> complete(@PathVariable Long id, @RequestBody Map<String, Object> body, HttpSession session) {
         Double finalAmount = ((Number) body.get("finalAmount")).doubleValue();
         Booking booking = providerService.completeRequest(id, providerId(session), finalAmount);
+=======
+<<<<<<< HEAD
+    public ResponseEntity<?> complete(@PathVariable Long id, HttpSession session) {
+        Booking booking = providerService.completeRequest(id, providerId(session));
+=======
+    public ResponseEntity<?> complete(@PathVariable Long id, @RequestBody Map<String, Object> body, HttpSession session) {
+        Double finalAmount = ((Number) body.get("finalAmount")).doubleValue();
+        Booking booking = providerService.completeRequest(id, providerId(session), finalAmount);
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
         return ResponseEntity.ok(toDTO(booking));
     }
     // ----------------------------
@@ -105,9 +127,18 @@ public ResponseEntity<?> completed(HttpSession session) {
     r.setRating(b.getRating());
     r.setReview(b.getReview());
     r.setProviderName(b.getProviderName());
+<<<<<<< HEAD
     r.setCustomerEstimatedPrice(b.getCustomerEstimatedPrice());
     r.setProviderEstimatedPrice(b.getProviderEstimatedPrice());
     r.setFinalAmount(b.getFinalAmount());
+=======
+<<<<<<< HEAD
+=======
+    r.setCustomerEstimatedPrice(b.getCustomerEstimatedPrice());
+    r.setProviderEstimatedPrice(b.getProviderEstimatedPrice());
+    r.setFinalAmount(b.getFinalAmount());
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     r.setAmount(b.getAmount());
        r.setCustomerLatitude(b.getCustomerLatitude());
        r.setCustomerLongitude(b.getCustomerLongitude());

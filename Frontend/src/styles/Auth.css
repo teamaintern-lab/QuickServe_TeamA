@@ -897,7 +897,11 @@ body {
 }
 .role-cards {
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(2, 240px); /* 🔹 smaller width */
+=======
+  grid-template-columns: repeat(3, 240px); /* 🔹 smaller width */
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
   justify-content: center;                 /* center alignment */
   gap: 24px;
   margin-bottom: 30px;

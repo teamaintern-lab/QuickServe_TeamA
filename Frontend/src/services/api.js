@@ -129,8 +129,18 @@ export const getLiveLocation = (bookingId) =>
 /* ===============================
    CHAT
 ================================ */
+<<<<<<< HEAD
 export const sendChatMessage = (bookingId, message) =>
   api.post(`/chat/bookings/${bookingId}/messages`, { message });
+=======
+<<<<<<< HEAD
+export const sendChatMessage = (bookingId, message, senderId) =>
+  api.post(`/chat/bookings/${bookingId}/messages`, { message, senderId });
+=======
+export const sendChatMessage = (bookingId, message) =>
+  api.post(`/chat/bookings/${bookingId}/messages`, { message });
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
 export const getChatMessages = (bookingId) =>
   api.get(`/chat/bookings/${bookingId}/messages`);

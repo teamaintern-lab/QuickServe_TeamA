@@ -1,4 +1,5 @@
 com\quickservice\model\Ticket.class
+com\quickservice\util\GenerateBCryptPassword.class
 com\quickservice\controller\AuthController.class
 com\quickservice\QuickServiceApplication.class
 com\quickservice\service\ChatService.class

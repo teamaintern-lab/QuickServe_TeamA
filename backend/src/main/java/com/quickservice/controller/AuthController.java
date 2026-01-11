@@ -103,6 +103,7 @@ public class AuthController {
 
         return ResponseEntity.ok(resp);
     }
+<<<<<<< HEAD
 
     /* ===== ADMIN LOGIN (BACKEND ONLY) ===== */
     @PostMapping("/admin/login")
@@ -130,6 +131,8 @@ public class AuthController {
 
         return ResponseEntity.ok(resp);
     }
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     /* ===== LOGOUT ===== */
     @PostMapping("/logout")
     public ResponseEntity<AuthResponse> logout(HttpSession session) {

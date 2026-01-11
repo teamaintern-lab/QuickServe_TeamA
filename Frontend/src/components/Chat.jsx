@@ -2,7 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { sendChatMessage, getChatMessages } from "../services/api";
 import "../styles/chat.css";
 
+<<<<<<< HEAD
 export default function Chat({ bookingId, userId,  booking, isOpen, onClose }) {
+=======
+export default function Chat({ bookingId, userId, userName, booking, isOpen, onClose }) {
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -111,20 +115,63 @@ export default function Chat({ bookingId, userId,  booking, isOpen, onClose }) {
             messages.map((msg) => {
               // Determine message alignment
               let messageClass;
+<<<<<<< HEAD
               let timeClass;
+=======
+<<<<<<< HEAD
+=======
+              let timeClass;
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
               if (isCustomer) {
                 // For customer: own messages right, received left
                 if (String(msg.senderId) === String(userId)) {
                   messageClass = "provider"; // right
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                } else {
+                  messageClass = "customer"; // left
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                   timeClass = "sent";
                 } else {
                   messageClass = "customer"; // left
                   timeClass = "received";
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                 }
               } else {
                 // For provider: customer messages left, provider messages right
                 if (String(msg.senderId) === String(booking.userId)) {
                   messageClass = "customer"; // left
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                } else {
+                  messageClass = "provider"; // right
+                }
+              }
+
+              // Determine sender name
+              let senderName;
+              if (String(msg.senderId) === String(userId)) {
+                senderName = userName;
+              } else {
+                senderName = chatPartnerName;
+              }
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`chat-message ${messageClass}`}
+                >
+                  <div className="message-content">
+                    <span className="message-sender">{senderName}</span>
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                   timeClass = "received";
                 } else {
                   messageClass = "provider"; // right
@@ -138,6 +185,10 @@ export default function Chat({ bookingId, userId,  booking, isOpen, onClose }) {
                   className={`chat-message ${messageClass} ${timeClass}`}
                 >
                   <div className="message-content">
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                     <p>{msg.message}</p>
                     <span className="message-time">
                       {formatTime(msg.sentAt)}

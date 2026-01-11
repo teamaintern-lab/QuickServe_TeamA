@@ -6,10 +6,16 @@ import CustomerLogin from "./components/CustomerLogin";
 import ProviderLogin from "./components/ProviderLogin";
 import CustomerDashboard from "./components/CustomerDashboard";
 import ProviderDashboard from "./components/ProviderDashboard";
-import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
 import ForgotPassword from "./components/ForgotPassword";
+<<<<<<< HEAD
 import { getSession } from "./services/api";
+=======
+<<<<<<< HEAD
+import { getSession } from "./services/api";
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 import "leaflet/dist/leaflet.css";
 
 export default function App() {
@@ -23,6 +29,7 @@ export default function App() {
   const openRegister = () => setScreen("register");
 
   useEffect(() => {
+<<<<<<< HEAD
     const checkSession = async () => {
       // 1. Check for Session-Sticky Admin in sessionStorage
       const sessionAdmin = sessionStorage.getItem("sessionAdmin");
@@ -37,6 +44,23 @@ export default function App() {
           console.error("Error parsing sessionAdmin", e);
         }
       }
+=======
+    // Session recovery on mount
+    const recoverSession = async () => {
+      try {
+        const resp = await getSession();
+        if (resp.data.success) {
+          handleLoginSuccess(resp.data);
+        }
+      } catch (err) {
+        // No active session or error, ignore
+      }
+    };
+    recoverSession();
+  }, []);
+
+  const handleLoginSuccess = (data) => {
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
       // 2. Standard session check (fallback)
       try {
@@ -100,9 +124,13 @@ export default function App() {
             onSelectRole={(role) =>
               role === "customer"
                 ? setScreen("customerLogin")
+<<<<<<< HEAD
                 : role === "provider"
                   ? setScreen("providerLogin")
                   : setScreen("adminLogin")
+=======
+                : setScreen("providerLogin")
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
             }
             onRegister={() => setScreen("register")}
             onBack={goHome}
@@ -155,6 +183,7 @@ export default function App() {
             setScreen("home");
           }}
         />
+<<<<<<< HEAD
       )}
       {screen === "adminLogin" && (
         <div className="auth-container">
@@ -163,6 +192,8 @@ export default function App() {
             onBack={() => setScreen("roleSelector")}
           />
         </div>
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
       )}
 
       {screen === "adminDashboard" && (

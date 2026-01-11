@@ -66,7 +66,10 @@ export default function CustomerDashboard({ user, onLogout, onUpdateUser }) {
     setShowChat(false);
     setChatBooking(null);
   };
+<<<<<<< HEAD
    
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
   /* ------------------ DATA FETCH ------------------ */
 
@@ -86,6 +89,7 @@ export default function CustomerDashboard({ user, onLogout, onUpdateUser }) {
     const res = await getMyTickets();
     setTickets(Array.isArray(res.data) ? res.data : []);
   };
+<<<<<<< HEAD
 
    useEffect(() => {
     const loadTickets = async () => {
@@ -104,6 +108,18 @@ useEffect(() => {
   return () => clearTimeout(timer); // cleanup
 }, [activeTab]);
 
+=======
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  useEffect(() => {
+    setSelectedBooking(null);
+  }, [activeTab]);
+
+  /* ------------------ UI ------------------ */
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
 
   /* ------------------ UI ------------------ */

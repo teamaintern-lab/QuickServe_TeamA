@@ -10,11 +10,24 @@ import ProviderCompleted from "./provider/ProviderCompleted";
 import ProviderEarnings from "./provider/ProviderEarnings";
 import ProviderOverview from "./provider/ProviderOverview";
 import ProviderProfile from "./provider/ProviderProfile";
+<<<<<<< HEAD
 import ProviderRequests from "./provider/ProviderRequests";
+=======
+import Chat from "./Chat";
+import {
+  getProviderRequests,
+  getProviderEarnings,
+  getProviderCompleted,
+} from "../services/api";
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
 import MapComponent from "../components/Map/MapComponent";
 import "../styles/dashboard.common.css";
 import "../styles/provider-dashboard.css";
+<<<<<<< HEAD
+=======
+import MapComponent from "../components/Map/MapComponent";
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
 export default function ProviderDashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -25,7 +38,14 @@ const [selectedRequest, setSelectedRequest] = useState(null);
 const [chatBooking, setChatBooking] = useState(null);
 const [showChat, setShowChat] = useState(false);
 // 🔴 FIXED PROVIDER LOCATION (constant)
+<<<<<<< HEAD
 
+=======
+const PROVIDER_LOCATION = {
+  latitude: 13.6833,
+  longitude: 79.3476
+};
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
 const PROVIDER_LOCATION = {
   latitude: 13.6833,
@@ -44,6 +64,15 @@ const PROVIDER_LOCATION = {
   
 
   useEffect(() => {
+<<<<<<< HEAD
+=======
+    loadOverview();
+    // Load earnings once so overview can use it
+    getProviderEarnings().then(res => setEarnings(res.data));
+  }, []);
+
+  useEffect(() => {
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     if (activeTab === "earnings") {
       getProviderEarnings().then(res => setEarnings(res.data));
     }
@@ -56,12 +85,19 @@ const PROVIDER_LOCATION = {
   }, [activeTab]);
 useEffect(() => {
   if (activeTab !== "requests") {
+<<<<<<< HEAD
     const timer = setTimeout(() => setSelectedRequest(null), 0);
     return () => clearTimeout(timer);
   }
 }, [activeTab]);
 
 
+=======
+    setSelectedRequest(null);
+  }
+}, [activeTab]);
+
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 useEffect(() => {
   if (selectedRequest) {
     console.log(
@@ -70,6 +106,8 @@ useEffect(() => {
       user.longitude,
       selectedRequest.customerLatitude,
       selectedRequest.customerLongitude
+<<<<<<< HEAD
+=======
     );
   }
 }, [selectedRequest, user.latitude, user.longitude]);
@@ -79,6 +117,37 @@ useEffect(() => {
     setShowChat(true);
   };
 
+  const closeChat = () => {
+    setShowChat(false);
+    setChatBooking(null);
+  };
+
+  const loadOverview = async () => {
+    const res = await getProviderRequests();
+    const data = res.data || [];
+
+    const completedJobs = data.filter(r => r.status === "COMPLETED");
+    const accepted = data.filter(r => r.status === "ACCEPTED");
+    const pending = data.filter(r => r.status === "REQUESTED");
+
+    const totalEarnings = completedJobs.reduce(
+<<<<<<< HEAD
+      (sum, r) => sum + (r.amount || 0),
+=======
+      (sum, r) => sum + (r.finalAmount || r.amount || 0),
+>>>>>>> 7e6c529 (final updated code)
+      0
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
+    );
+  }
+}, [selectedRequest, user.latitude, user.longitude]);
+
+  const openChat = (booking) => {
+    setChatBooking(booking);
+    setShowChat(true);
+  };
+
+<<<<<<< HEAD
   const closeChat = () => {
     setShowChat(false);
     setChatBooking(null);
@@ -143,6 +212,18 @@ const fetchOverview = async () => {
   //     latitude: r.customerLatitude,
   //     longitude: r.customerLongitude,
   //   }));
+=======
+  /* ---------------- MAP DATA ---------------- */
+
+  const customerLocations = requests
+    .filter(r => r.customerLatitude && r.customerLongitude)
+    .map(r => ({
+      id: r.id,
+      name: "Customer",
+      latitude: r.customerLatitude,
+      longitude: r.customerLongitude,
+    }));
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
   /* ---------------- UI ---------------- */
 
@@ -203,7 +284,11 @@ const fetchOverview = async () => {
           <>
             <ProviderRequests
               requests={requests}
+<<<<<<< HEAD
               onRefresh={fetchOverview}
+=======
+              onRefresh={loadOverview}
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
               onSelect={setSelectedRequest}
               onChat={openChat}
             />

@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/auth/**",
                         "/api/services",
                         "/api/public/**",
-                        "/api/admin/**",   // ✅ ADD THIS
+                        "/api/admin/**",   
                         "/error"
                 );
     }

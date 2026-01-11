@@ -6,8 +6,11 @@ import com.quickservice.repository.BookingRepository;
 import com.quickservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ProviderService {
@@ -17,8 +20,18 @@ public class ProviderService {
     private final EmailService emailService;
 
     public ProviderService(BookingRepository bookingRepository,
+<<<<<<< HEAD
                            UserRepository userRepository,
                            EmailService emailService) {
+=======
+<<<<<<< HEAD
+            UserRepository userRepository,
+            EmailService emailService) {
+=======
+                           UserRepository userRepository,
+                           EmailService emailService) {
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -36,6 +49,27 @@ public class ProviderService {
         List<Booking> requested = bookingRepository
                 .findByServiceTypeAndStatus(
                         provider.getCategory(),
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                        "REQUESTED");
+
+        // 2️⃣ Assigned to this provider (only ACTIVE ones: REQUESTED, ACCEPTED,
+        // COMPLETED)
+        List<Booking> assigned = bookingRepository
+                .findByServiceId(providerId)
+                .stream()
+                .filter(b -> !b.getStatus().equals("DECLINED") && !b.getStatus().equals("CANCELLED"))
+                .toList();
+
+        // 3️⃣ Use a Set to merge and avoid duplicates (matched by booking ID)
+        // LinkedHashSet preserves insertion order
+        Set<Booking> uniqueRequests = new LinkedHashSet<>(requested);
+        uniqueRequests.addAll(assigned);
+
+        return new ArrayList<>(uniqueRequests);
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                         "REQUESTED"
                 );
 
@@ -47,6 +81,10 @@ public class ProviderService {
         requested.addAll(assigned);
 
         return requested;
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     }
 
 
@@ -64,6 +102,26 @@ public class ProviderService {
         // Send notification email to customer
         try {
             User customer = userRepository.findById(acceptedBooking.getUserId())
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                    .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + acceptedBooking.getBookingDateTime() +
+                    "\nAddress: " + acceptedBooking.getAddress() +
+                    "\nDescription: " + acceptedBooking.getDescription() +
+                    "\nAmount: ₹" + acceptedBooking.getAmount();
+
+            emailService.sendProviderResponseNotification(
+                    customer.getEmail(),
+                    provider.getFullName(),
+                    acceptedBooking.getServiceType(),
+                    bookingDetails,
+                    true // isAccepted
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
             User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new RuntimeException("Provider not found"));
@@ -85,6 +143,10 @@ public class ProviderService {
                 acceptedBooking.getServiceType(),
                 bookingDetails,
                 true // isAccepted
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
             );
         } catch (Exception e) {
             // Log the error but don't fail the acceptance
@@ -103,6 +165,26 @@ public class ProviderService {
         // Send notification email to customer
         try {
             User customer = userRepository.findById(declinedBooking.getUserId())
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                    .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + declinedBooking.getBookingDateTime() +
+                    "\nAddress: " + declinedBooking.getAddress() +
+                    "\nDescription: " + declinedBooking.getDescription() +
+                    "\nAmount: ₹" + declinedBooking.getAmount();
+
+            emailService.sendProviderResponseNotification(
+                    customer.getEmail(),
+                    provider.getFullName(),
+                    declinedBooking.getServiceType(),
+                    bookingDetails,
+                    false // isAccepted = false (declined)
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
             User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new RuntimeException("Provider not found"));
@@ -118,6 +200,10 @@ public class ProviderService {
                 declinedBooking.getServiceType(),
                 bookingDetails,
                 false // isAccepted = false (declined)
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
             );
         } catch (Exception e) {
             // Log the error but don't fail the decline
@@ -137,6 +223,22 @@ public class ProviderService {
         // Send completion notification email to customer
         try {
             User customer = userRepository.findById(completedBooking.getUserId())
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                    .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + completedBooking.getBookingDateTime() +
+                    "\nAddress: " + completedBooking.getAddress() +
+                    "\nDescription: " + completedBooking.getDescription() +
+                    "\nAmount: ₹" + completedBooking.getAmount();
+
+            emailService.sendCompletionNotification(customer.getEmail(), provider.getFullName(),
+                    completedBooking.getServiceType(), bookingDetails);
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
             User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new RuntimeException("Provider not found"));
@@ -156,6 +258,10 @@ public class ProviderService {
             }
 
             emailService.sendCompletionNotification(customer.getEmail(), provider.getFullName(), completedBooking.getServiceType(), bookingDetails);
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
         } catch (Exception e) {
             // Log the error but don't fail the completion
             System.err.println("Failed to send completion notification email: " + e.getMessage());
@@ -185,29 +291,27 @@ public class ProviderService {
 
     public User updateProviderProfile(Long providerId, Map<String, Object> body) {
 
-    User user = userRepository.findById(providerId)
-            .orElseThrow(() -> new RuntimeException("Provider not found"));
+        User user = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
 
-    if (body.containsKey("fullName"))
-        user.setFullName(body.get("fullName").toString());
+        if (body.containsKey("fullName"))
+            user.setFullName(body.get("fullName").toString());
 
-    if (body.containsKey("category"))
-        user.setCategory(body.get("category").toString());
+        if (body.containsKey("category"))
+            user.setCategory(body.get("category").toString());
 
-    if (body.containsKey("customService"))
-        user.setCustomService(body.get("customService").toString());
+        if (body.containsKey("customService"))
+            user.setCustomService(body.get("customService").toString());
 
-    if (body.containsKey("experience"))
-        user.setExperience(
-                Integer.parseInt(body.get("experience").toString())
-        );
+        if (body.containsKey("experience"))
+            user.setExperience(
+                    Integer.parseInt(body.get("experience").toString()));
 
-    if (body.containsKey("phone"))
-        user.setPhone(body.get("phone").toString());
+        if (body.containsKey("phone"))
+            user.setPhone(body.get("phone").toString());
 
-    return userRepository.save(user);
-}
-
+        return userRepository.save(user);
+    }
 
     // =========================
     // INTERNAL HELPERS
@@ -236,33 +340,34 @@ public class ProviderService {
                 .map(User::getFullName)
                 .orElse("Unknown Provider");
     }
+
     public Map<String, Object> getEarnings(Long providerId) {
 
-    List<Booking> completed = bookingRepository
-            .findByServiceIdAndStatus(providerId, "COMPLETED");
+        List<Booking> completed = bookingRepository
+                .findByServiceIdAndStatus(providerId, "COMPLETED");
 
-    List<Booking> accepted = bookingRepository
-            .findByServiceIdAndStatus(providerId, "ACCEPTED");
+        List<Booking> accepted = bookingRepository
+                .findByServiceIdAndStatus(providerId, "ACCEPTED");
 
-    double total = completed.stream()
-            .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
-            .sum();
+        double total = completed.stream()
+                .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
+                .sum();
 
-    double pending = accepted.stream()
-            .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
-            .sum();
+        double pending = accepted.stream()
+                .mapToDouble(b -> b.getAmount() != null ? b.getAmount() : 0)
+                .sum();
 
-    double avg = completed.isEmpty() ? 0 : total / completed.size();
+        double avg = completed.isEmpty() ? 0 : total / completed.size();
 
-    return Map.of(
-            "total", total,
-            "pending", pending,
-            "avg", Math.round(avg),
-            "completedCount", completed.size()
-    );
-}
-public List<Booking> getCompletedServices(Long providerId) {
-    return bookingRepository.findByServiceIdAndStatus(providerId, "COMPLETED");
-}
+        return Map.of(
+                "total", total,
+                "pending", pending,
+                "avg", Math.round(avg),
+                "completedCount", completed.size());
+    }
+
+    public List<Booking> getCompletedServices(Long providerId) {
+        return bookingRepository.findByServiceIdAndStatus(providerId, "COMPLETED");
+    }
 
 }

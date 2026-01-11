@@ -19,9 +19,18 @@ public class BookingResponse {
     private String providerName;
     private String providerEmail;
     private String customerName;
+<<<<<<< HEAD
     private Double customerEstimatedPrice;
     private Double providerEstimatedPrice;
     private Double finalAmount;
+=======
+<<<<<<< HEAD
+=======
+    private Double customerEstimatedPrice;
+    private Double providerEstimatedPrice;
+    private Double finalAmount;
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     private Double amount;
 
     private Double customerLatitude;
@@ -77,6 +86,11 @@ public class BookingResponse {
     public String getCustomerName() { return customerName; }
     public void setCustomerName(String customerName) { this.customerName = customerName; }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public Double getCustomerEstimatedPrice() { return customerEstimatedPrice; }
     public void setCustomerEstimatedPrice(Double customerEstimatedPrice) { this.customerEstimatedPrice = customerEstimatedPrice; }
 
@@ -86,6 +100,10 @@ public class BookingResponse {
     public Double getFinalAmount() { return finalAmount; }
     public void setFinalAmount(Double finalAmount) { this.finalAmount = finalAmount; }
 
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public Double getAmount() { return amount; }
     public void setAmount(Double amount) { this.amount = amount; }
 

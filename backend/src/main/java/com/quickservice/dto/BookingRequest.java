@@ -11,7 +11,15 @@ public class BookingRequest {
     private Long providerId;        // maps to service_id column
     private String providerName;
     private String phone;
+<<<<<<< HEAD
     private Double customerEstimatedPrice;
+=======
+<<<<<<< HEAD
+    private Double amount;
+=======
+    private Double customerEstimatedPrice;
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     private Double customerLatitude;
     private Double customerLongitude;
     private Double providerLatitude;

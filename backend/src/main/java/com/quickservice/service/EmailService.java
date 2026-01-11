@@ -2,6 +2,7 @@ package com.quickservice.service;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,13 @@ public class EmailService {
         mailSender.send(msg);
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    @Async
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public void sendBookingNotification(String providerEmail, String customerName, String serviceType, String bookingDetails, boolean isNewBooking) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(providerEmail);
@@ -52,6 +60,13 @@ public class EmailService {
         mailSender.send(msg);
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    @Async
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public void sendProviderResponseNotification(String customerEmail, String providerName, String serviceType, String bookingDetails, boolean isAccepted) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(customerEmail);
@@ -79,6 +94,13 @@ public class EmailService {
         mailSender.send(msg);
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    @Async
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public void sendCompletionNotification(String customerEmail, String providerName, String serviceType, String bookingDetails) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(customerEmail);

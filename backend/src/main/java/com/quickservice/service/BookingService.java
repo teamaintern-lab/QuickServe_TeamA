@@ -6,6 +6,8 @@ import com.quickservice.repository.BookingRepository;
 import org.springframework.stereotype.Service;
 import com.quickservice.model.User;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -24,10 +26,42 @@ public class BookingService {
 
     // Create new booking
     public Booking createBooking(Long userId, BookingRequest req) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        // Prevent duplicate bookings (e.g., within 2 minutes for same provider and service)
+        List<Booking> recentBookings = bookingRepository.findByUserIdOrderByIdDesc(userId);
+        if (!recentBookings.isEmpty()) {
+            Booking lastBooking = recentBookings.get(0);
+            
+            // Basic check: same service type and provider
+            boolean sameService = lastBooking.getServiceType().equals(req.getServiceType());
+            boolean sameProvider = (lastBooking.getServiceId() != null && req.getProviderId() != null && 
+                                    lastBooking.getServiceId().equals(Long.valueOf(req.getProviderId())));
+            
+            if (sameService && sameProvider) {
+                // Time check (within 2 minutes)
+                try {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    LocalDateTime lastTime = LocalDateTime.parse(lastBooking.getBookingDateTime(), formatter);
+                    if (lastTime.isAfter(LocalDateTime.now().minusMinutes(2))) {
+                        throw new IllegalArgumentException("A similar booking request was recently made. Please wait 2 minutes.");
+                    }
+                } catch (Exception e) {
+                    // Fallback or log error
+                }
+            }
+        }
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
         System.out.println("Creating booking for user: " + userId);
         System.out.println("BookingRequest - serviceType: " + req.getServiceType());
         System.out.println("BookingRequest - bookingDateTime: " + req.getBookingDateTime());
         System.out.println("BookingRequest - providerId: " + req.getProviderId());
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
         Booking b = new Booking();
 
@@ -38,7 +72,15 @@ public class BookingService {
         b.setDescription(req.getDescription());
         b.setPhone(req.getPhone());
         b.setBookingDateTime(req.getBookingDateTime());
+<<<<<<< HEAD
         b.setCustomerEstimatedPrice(req.getCustomerEstimatedPrice());
+=======
+<<<<<<< HEAD
+        b.setAmount(req.getAmount());
+=======
+        b.setCustomerEstimatedPrice(req.getCustomerEstimatedPrice());
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
         // ===== LOCATION SNAPSHOT =====
         b.setCustomerLatitude(req.getCustomerLatitude());
@@ -46,6 +88,30 @@ public class BookingService {
 
         // Default state
         b.setStatus("REQUESTED");
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        b.setProviderName("Pending Assignment");
+
+        // ===== DISTANCE-BASED MATCHING =====
+        if (req.getCustomerLatitude() != null && req.getCustomerLongitude() != null) {
+
+            List<User> nearbyProviders =
+                    userService.findNearestProviders(
+                            req.getCustomerLatitude(),
+                            req.getCustomerLongitude(),
+                            10.0 // 10 KM radius
+                    );
+
+            if (!nearbyProviders.isEmpty()) {
+                User nearest = nearbyProviders.get(0);
+
+                b.setServiceId(nearest.getId());
+                b.setProviderName(nearest.getFullName());
+                b.setProviderLatitude(nearest.getLatitude());
+                b.setProviderLongitude(nearest.getLongitude());
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
         // ===== USE SELECTED PROVIDER =====
         if (req.getProviderId() != null) {
@@ -78,6 +144,10 @@ public class BookingService {
                     b.setProviderLatitude(nearest.getLatitude());
                     b.setProviderLongitude(nearest.getLongitude());
                 }
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
             }
         }
 
@@ -94,7 +164,11 @@ public class BookingService {
                 String bookingDetails = "Date: " + savedBooking.getBookingDateTime() +
                                       "\nAddress: " + savedBooking.getAddress() +
                                       "\nDescription: " + savedBooking.getDescription() +
+<<<<<<< HEAD
                                       "\nEstimated Amount: ₹" + savedBooking.getCustomerEstimatedPrice();
+=======
+                                      "\nAmount: ₹" + savedBooking.getAmount();
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
                 emailService.sendBookingNotification(
                     provider.getEmail(),
@@ -146,7 +220,11 @@ public class BookingService {
                 String bookingDetails = "Date: " + cancelledBooking.getBookingDateTime() +
                                       "\nAddress: " + cancelledBooking.getAddress() +
                                       "\nDescription: " + cancelledBooking.getDescription() +
+<<<<<<< HEAD
                                       "\nEstimated Amount: ₹" + cancelledBooking.getCustomerEstimatedPrice();
+=======
+                                      "\nAmount: ₹" + cancelledBooking.getAmount();
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
                 emailService.sendBookingNotification(
                     provider.getEmail(),

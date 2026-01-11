@@ -49,7 +49,10 @@ export default function RoleSelector({ onSelectRole, onRegister, onBack }) {
             </div>
           </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
         </div>
 
         {/* REGISTER LINK */}

@@ -2,6 +2,7 @@ package com.quickservice.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(name = "bookings")
@@ -9,16 +10,19 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;   // REAL PRIMARY KEY
+    private Long id; // REAL PRIMARY KEY
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;  // just store the ID, not the user object
+    private Long userId; // just store the ID, not the user object
+
+    @Column(name = "provider_id", nullable = true)
+    private Long providerId;  // provider ID selected by customer
 
     @Column(name = "provider_id", nullable = true)
     private Long providerId;  // provider ID selected by customer
 
     @Column(nullable = true)
-    private Long serviceId;   // you are not using ServiceItem now
+    private Long serviceId; // you are not using ServiceItem now
 
     @Column(nullable = true)
     private String serviceType;
@@ -34,7 +38,7 @@ public class Booking {
 
     private String phone;
 
-    private String bookingDateTime;  // date + time combined
+    private String bookingDateTime; // date + time combined
 
     private String status = "REQUESTED";
 
@@ -73,53 +77,154 @@ public class Booking {
 
     @Column(name = "provider_longitude")
     private Double providerLongitude;
+<<<<<<< HEAD
 
 
+=======
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
     // Getters & Setters
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+<<<<<<< HEAD
+    public Long getUserId() {
+        return userId;
+    }
+=======
+    public Long getProviderId() { return providerId; }
+    public void setProviderId(Long providerId) { this.providerId = providerId; }
 
     public Long getProviderId() { return providerId; }
     public void setProviderId(Long providerId) { this.providerId = providerId; }
 
     public Long getServiceId() { return serviceId; }
     public void setServiceId(Long serviceId) { this.serviceId = serviceId; }
+>>>>>>> 7e6c529 (final updated code)
 
-    public String getServiceType() { return serviceType; }
-    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-    public String getUrgency() { return urgency; }
-    public void setUrgency(String urgency) { this.urgency = urgency; }
+    public Long getServiceId() {
+        return serviceId;
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getServiceType() {
+        return serviceType;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
 
-    public String getBookingDateTime() { return bookingDateTime; }
-    public void setBookingDateTime(String bookingDateTime) { this.bookingDateTime = bookingDateTime; }
+    public String getUrgency() {
+        return urgency;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setUrgency(String urgency) {
+        this.urgency = urgency;
+    }
 
-    public Integer getRating() { return rating; }
-    public void setRating(Integer rating) { this.rating = rating; }
+    public String getAddress() {
+        return address;
+    }
 
-    public String getReview() { return review; }
-    public void setReview(String review) { this.review = review; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public String getProviderName() { return providerName; }
-    public void setProviderName(String providerName) { this.providerName = providerName; }
+    public String getDescription() {
+        return description;
+    }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getBookingDateTime() {
+        return bookingDateTime;
+    }
+
+    public void setBookingDateTime(String bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public Double getCustomerEstimatedPrice() { return customerEstimatedPrice; }
     public void setCustomerEstimatedPrice(Double customerEstimatedPrice) { this.customerEstimatedPrice = customerEstimatedPrice; }
 
@@ -131,6 +236,10 @@ public class Booking {
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 
     public Double getCustomerLatitude() {
         return customerLatitude;
@@ -164,6 +273,25 @@ public class Booking {
         this.providerLongitude = providerLongitude;
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(id, booking.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+=======
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
     public Double getAmount() {
         return amount;
     }
@@ -172,4 +300,8 @@ public class Booking {
         this.amount = amount;
     }
 
+<<<<<<< HEAD
+=======
+>>>>>>> 7e6c529 (final updated code)
+>>>>>>> 562cdde93932ada8ce0c7d439ebcf1519a84b47b
 }
