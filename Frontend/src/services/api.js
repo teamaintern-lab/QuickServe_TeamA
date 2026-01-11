@@ -8,6 +8,14 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// ✅ ADD OVERRIDE HEADER IF ADMIN IS STICKY
+api.interceptors.request.use((config) => {
+  if (sessionStorage.getItem("sessionAdmin")) {
+    config.headers["X-Admin-Override"] = "true";
+  }
+  return config;
+});
+
 /* ===============================
    AUTH
 ================================ */
@@ -50,14 +58,14 @@ export const getProviderCalendar = () =>
 export const getProviderRequests = () =>
   api.get("/provider/requests");
 
-export const acceptRequest = (id) =>
-  api.put(`/provider/requests/${id}/accept`);
+export const acceptRequest = (id, providerEstimatedPrice) =>
+  api.put(`/provider/requests/${id}/accept`, { providerEstimatedPrice });
 
 export const declineRequest = (id) =>
   api.put(`/provider/requests/${id}/decline`);
 
-export const completeRequest = (id) =>
-  api.put(`/provider/requests/${id}/complete`);
+export const completeRequest = (id, finalAmount) =>
+  api.put(`/provider/requests/${id}/complete`, { finalAmount });
 
 export const getProviderProfile = () =>
   api.get("/provider/profile");
@@ -115,3 +123,15 @@ export const verifyEmailOtp = (data) =>
 
 export const resetPassword = (data) =>
   api.post("/auth/reset-password", data);
+export const getLiveLocation = (bookingId) =>
+  axios.get(`/api/location/${bookingId}`, { withCredentials: true });
+
+/* ===============================
+   CHAT
+================================ */
+export const sendChatMessage = (bookingId, message) =>
+  api.post(`/chat/bookings/${bookingId}/messages`, { message });
+
+export const getChatMessages = (bookingId) =>
+  api.get(`/chat/bookings/${bookingId}/messages`);
+

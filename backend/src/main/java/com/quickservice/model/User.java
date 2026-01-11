@@ -52,6 +52,13 @@ public class User {
     @Column(name = "otp_last_sent_at")
     private Instant otpLastSentAt;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
+
     public User() {}
 
     public User(String email, String password, String fullName, String role) {
@@ -125,6 +132,23 @@ public class User {
     public void setOtpLastSentAt(Instant otpLastSentAt) {
         this.otpLastSentAt = otpLastSentAt;
     }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
 
 
 }

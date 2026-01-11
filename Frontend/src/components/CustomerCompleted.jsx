@@ -104,7 +104,7 @@ export default function CustomerCompleted() {
             </div>
 
             <p className="completed-meta">
-              {b.bookingDateTime} • ₹{b.amount}
+              {b.bookingDateTime} • ₹{b.finalAmount || b.amount || 0}
             </p>
 
             {editingId === b.id ? (
@@ -119,8 +119,13 @@ export default function CustomerCompleted() {
                           ? "filled"
                           : ""
                       }`}
-                      onMouseEnter={() => setHover({ [b.id]: i })}
-                      onMouseLeave={() => setHover({ [b.id]: 0 })}
+                      onMouseEnter={() =>
+  setHover(prev => ({ ...prev, [b.id]: i }))
+}
+onMouseLeave={() =>
+  setHover(prev => ({ ...prev, [b.id]: 0 }))
+}
+
                       onClick={() => handleChange(b.id, "rating", i)}
                     >
                       ★

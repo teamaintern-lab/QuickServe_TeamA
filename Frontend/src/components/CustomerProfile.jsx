@@ -13,14 +13,22 @@ export default function CustomerProfile({ user, onUpdateUser }) {
   });
 
   useEffect(() => {
-    getProfile().then(res => {
-      setProfile(res.data);
-      setForm({
-        fullName: res.data.fullName,
-        phone: res.data.phone || "",
+    getProfile()
+      .then(res => {
+        console.log("PROFILE API RESPONSE:", res.data);
+
+        setProfile(res.data);
+        setForm({
+          fullName: res.data.fullName,
+          phone: res.data.phone || "",
+        });
+      })
+      .catch(err => {
+        console.error("PROFILE API FAILED:", err);
+        alert("Failed to load profile. Please login again.");
       });
-    });
   }, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

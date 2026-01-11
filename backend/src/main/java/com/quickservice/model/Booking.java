@@ -14,6 +14,9 @@ public class Booking {
     @Column(name = "user_id", nullable = false)
     private Long userId;  // just store the ID, not the user object
 
+    @Column(name = "provider_id", nullable = true)
+    private Long providerId;  // provider ID selected by customer
+
     @Column(nullable = true)
     private Long serviceId;   // you are not using ServiceItem now
 
@@ -42,10 +45,35 @@ public class Booking {
 
     private String providerName;
 
-    private Double amount;
+    @Column(name = "customer_estimated_price")
+    private Double customerEstimatedPrice;
+
+    @Column(name = "provider_estimated_price")
+    private Double providerEstimatedPrice;
+
+    @Column(name = "final_amount")
+    private Double finalAmount;
+
+    @Column(nullable = true)
+    private Double amount; // Legacy field for backward compatibility
 
     @Column(name = "created_at", updatable = false)
     private Instant createdAt = Instant.now();
+
+    // Customer location snapshot
+    @Column(name = "customer_latitude")
+    private Double customerLatitude;
+
+    @Column(name = "customer_longitude")
+    private Double customerLongitude;
+
+    // Provider location snapshot
+    @Column(name = "provider_latitude")
+    private Double providerLatitude;
+
+    @Column(name = "provider_longitude")
+    private Double providerLongitude;
+
 
 
     // Getters & Setters
@@ -55,6 +83,9 @@ public class Booking {
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
+
+    public Long getProviderId() { return providerId; }
+    public void setProviderId(Long providerId) { this.providerId = providerId; }
 
     public Long getServiceId() { return serviceId; }
     public void setServiceId(Long serviceId) { this.serviceId = serviceId; }
@@ -89,9 +120,56 @@ public class Booking {
     public String getProviderName() { return providerName; }
     public void setProviderName(String providerName) { this.providerName = providerName; }
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    public Double getCustomerEstimatedPrice() { return customerEstimatedPrice; }
+    public void setCustomerEstimatedPrice(Double customerEstimatedPrice) { this.customerEstimatedPrice = customerEstimatedPrice; }
+
+    public Double getProviderEstimatedPrice() { return providerEstimatedPrice; }
+    public void setProviderEstimatedPrice(Double providerEstimatedPrice) { this.providerEstimatedPrice = providerEstimatedPrice; }
+
+    public Double getFinalAmount() { return finalAmount; }
+    public void setFinalAmount(Double finalAmount) { this.finalAmount = finalAmount; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+
+    public Double getCustomerLatitude() {
+        return customerLatitude;
+    }
+
+    public void setCustomerLatitude(Double customerLatitude) {
+        this.customerLatitude = customerLatitude;
+    }
+
+    public Double getCustomerLongitude() {
+        return customerLongitude;
+    }
+
+    public void setCustomerLongitude(Double customerLongitude) {
+        this.customerLongitude = customerLongitude;
+    }
+
+    public Double getProviderLatitude() {
+        return providerLatitude;
+    }
+
+    public void setProviderLatitude(Double providerLatitude) {
+        this.providerLatitude = providerLatitude;
+    }
+
+    public Double getProviderLongitude() {
+        return providerLongitude;
+    }
+
+    public void setProviderLongitude(Double providerLongitude) {
+        this.providerLongitude = providerLongitude;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
 }

@@ -17,13 +17,14 @@ export default function ProviderCompleted({ completed = [] }) {
               {/* HEADER */}
               <div className="completed-header">
                 <h3>{b.serviceType}</h3>
-                <span className="completed-amount">₹{b.amount}</span>
+                <span className="completed-amount">₹{b.finalAmount || b.amount || 0}</span>
               </div>
 
               {/* BODY */}
               <div className="completed-body">
                 <p>📅 {b.bookingDateTime}</p>
                 <p>📍 {b.address}</p>
+                {b.description && <p>📝 {b.description}</p>}
               </div>
 
               {/* FEEDBACK SUMMARY */}
