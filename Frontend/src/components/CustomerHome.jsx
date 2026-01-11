@@ -4,7 +4,7 @@ import { getProviders } from "../services/api";
 
 export default function CustomerHome({ onBook }) {
   const [query, setQuery] = useState("");
-  const [services, setServices] = useState([]);
+
   const inputRef = useRef(null);
 
   // Dummy predefined services
@@ -40,11 +40,11 @@ export default function CustomerHome({ onBook }) {
       rating: 4.9,
     }
   ];
-
+const [services, setServices] = useState(dummyServices);
   // Load Providers from backend and convert them
   useEffect(() => {
   // Always show dummy services first
-  setServices(dummyServices);
+  
 
   getProviders()
     .then((res) => {

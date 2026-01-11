@@ -183,3 +183,8 @@ background: linear-gradient(135deg, #ded7fd, #decefd);
   z-index: 1000;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
+.dashboard-wrapper,
+.dashboard-main {
+  max-width: 100vw;
+  overflow-x: hidden;
+}

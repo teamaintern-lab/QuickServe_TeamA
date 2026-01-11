@@ -87,45 +87,50 @@ export default function AdminDashboard({ user, onLogout }) {
             alert("Failed to delete service.");
         }
     };
-
     return (
-        <div className="dashboard-container">
-            <aside className="sidebar">
-                <div className="sidebar-header">
-                    <div className="logo-icon">⚡</div>
-                    <h2>Admin Panel</h2>
+        <div className="admin-layout">
+
+            {/* TOP NAVBAR */}
+            <header className="admin-navbar">
+                <div className="navbar-left">
+                    <span className="logo-icon">⚡</span>
+                    <span className="navbar-title">Admin Panel</span>
                 </div>
-                <nav className="sidebar-nav">
+
+                <nav className="navbar-links">
                     <button
-                        className={`nav-item ${activeTab === 'overview' ? 'active' : ''}`}
+                        className={activeTab === "overview" ? "active" : ""}
                         onClick={() => setActiveTab("overview")}
                     >
-                        <span className="icon">📊</span> <span>System Overview</span>
+                        📊 Overview
                     </button>
+
                     <button
-                        className={`nav-item ${activeTab === 'users' ? 'active' : ''}`}
+                        className={activeTab === "users" ? "active" : ""}
                         onClick={() => setActiveTab("users")}
                     >
-                        <span className="icon">👥</span> <span>User Management</span>
+                        👥 Users
                     </button>
+
                     <button
-                        className={`nav-item ${activeTab === 'services' ? 'active' : ''}`}
+                        className={activeTab === "services" ? "active" : ""}
                         onClick={() => setActiveTab("services")}
                     >
-                        <span className="icon">🛠️</span> <span>Service Catalog</span>
-                    </button>
-                    <button onClick={onLogout} className="nav-item logout">
-                        <span className="icon">🚗</span> <span>Logout</span>
+                        🛠 Services
                     </button>
                 </nav>
-            </aside>
 
-            <main className="main-content">
+                <div className="navbar-right">
+                    <span className="admin-name">{user?.fullName}</span>
+                    <button className="logout-btn" onClick={onLogout}>Logout</button>
+                </div>
+            </header>
+
+            {/* MAIN CONTENT */}
+            <main className="admin-content">
                 <header className="main-header">
-                    <div className="welcome">
-                        <h1>Admin Dashboard</h1>
-                        <p>Welcome back, {user?.fullName}</p>
-                    </div>
+                    <h1>Admin Dashboard</h1>
+                    <p>Welcome back, {user?.fullName}</p>
                 </header>
 
                 {error && <div className="error-banner">{error}</div>}

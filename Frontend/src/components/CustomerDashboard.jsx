@@ -3,6 +3,7 @@ import BookingForm from "./BookingForm";
 import CustomerHome from "./CustomerHome";
 import CustomerProfile from "./CustomerProfile";
 import CustomerCompleted from "./CustomerCompleted";
+import Chat from "./Chat";
 import "../styles/dashboard.common.css";
 import "../styles/customer-dashboard.css";
 import "../styles/customer-support.css";
@@ -12,6 +13,9 @@ import {
   createTicket,
   cancelBooking
 } from "../services/api";
+import MapComponent from "../components/Map/MapComponent";
+import { PROVIDER_LOCATION } from "../constants/providerLocation";
+
 /* STATUS STYLES */
 const statusStyles = {
   REQUESTED: { bg: "#E0E7FF", text: "#3730A3" },
@@ -28,8 +32,13 @@ export default function CustomerDashboard({ user, onLogout, onUpdateUser }) {
   const [preselectedService, setPreselectedService] = useState("");
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showCreateTicket, setShowCreateTicket] = useState(false);
+  const [chatBooking, setChatBooking] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+
+  /* ------------------ HELPERS ------------------ */
 
   const showNotification = (message, type = "success") => {
     setNotification({ message, type });
@@ -48,25 +57,56 @@ export default function CustomerDashboard({ user, onLogout, onUpdateUser }) {
     setActiveTab("bookings");
   };
 
+  const openChat = (booking) => {
+    setChatBooking(booking);
+    setShowChat(true);
+  };
+
+  const closeChat = () => {
+    setShowChat(false);
+    setChatBooking(null);
+  };
+   
+
+  /* ------------------ DATA FETCH ------------------ */
+
   useEffect(() => {
-    getMyBookings()
-      .then(res => setBookings(res.data))
-      .catch(() => alert("Failed to load bookings"));
+    const loadBookings = async () => {
+      try {
+        const res = await getMyBookings();
+        setBookings(res.data);
+      } catch {
+        alert("Failed to load bookings");
+      }
+    };
+    loadBookings();
   }, []);
-const [tickets, setTickets] = useState([]);
 
-const fetchTickets = async () => {
-  const res = await getMyTickets();
+  const fetchTickets = async () => {
+    const res = await getMyTickets();
+    setTickets(Array.isArray(res.data) ? res.data : []);
+  };
 
-  const ticketsArray = Array.isArray(res.data) ? res.data : [];
-  setTickets(ticketsArray);
-};
-
+   useEffect(() => {
+    const loadTickets = async () => {
+      try {
+        const res = await getMyTickets();
+        setTickets(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error("Failed to fetch tickets:", err);
+      }
+    };
+    loadTickets();
+  }, []);
 
 useEffect(() => {
-  fetchTickets();
-}, []);
+  const timer = setTimeout(() => setSelectedBooking(null), 0);
+  return () => clearTimeout(timer); // cleanup
+}, [activeTab]);
 
+
+
+  /* ------------------ UI ------------------ */
 
   return (
     <div className="dashboard-container">
@@ -78,7 +118,7 @@ useEffect(() => {
         </div>
       )}
 
-      {/* FIXED TOP HEADER (ONLY HEADER IN FILE) */}
+      {/* HEADER */}
       <div className="dashboard-header">
         <div className="header-left">
           <div className="user-avatar">🛍️</div>
@@ -99,7 +139,7 @@ useEffect(() => {
         <button className="logout-btn" onClick={onLogout}>Logout</button>
       </div>
 
-      {/* MAIN CONTENT (NO EXTRA WRAPPERS ABOVE) */}
+      {/* MAIN CONTENT */}
       <div className="dashboard-main">
 
         <h1 className="page-title">
@@ -110,8 +150,10 @@ useEffect(() => {
           {activeTab === "support" && "Support"}
         </h1>
 
+        {/* HOME */}
         {activeTab === "home" && <CustomerHome onBook={openBookingForService} />}
 
+        {/* BOOKINGS */}
         {activeTab === "bookings" && (
           <div className="tab-content bookings-tab">
             <button
@@ -124,6 +166,10 @@ useEffect(() => {
               + New Booking
             </button>
 
+            {bookings.length === 0 && (
+              <p className="empty-text">No bookings yet</p>
+            )}
+
             <div className="bookings-grid">
               {bookings.map(b => (
                 <div key={b.id} className="booking-card">
@@ -132,15 +178,18 @@ useEffect(() => {
                   <span
                     className="status-pill"
                     style={{
-                      backgroundColor: statusStyles[b.status]?.bg || "#E5E7EB",
-                      color: statusStyles[b.status]?.text || "#374151"
+                      backgroundColor: statusStyles[b.status]?.bg,
+                      color: statusStyles[b.status]?.text
                     }}
                   >
                     {b.status}
                   </span>
 
                   <p>📅 {b.bookingDateTime || "Not Selected"}</p>
-                  <p>💰 ₹{b.amount || 0}</p>
+                  {b.customerEstimatedPrice && <p>💰 Your Estimate: ₹{b.customerEstimatedPrice}</p>}
+                  {b.providerEstimatedPrice && <p>💰 Provider Estimate: ₹{b.providerEstimatedPrice}</p>}
+                  {b.finalAmount && <p>💰 Final Amount: ₹{b.finalAmount}</p>}
+                  {!b.customerEstimatedPrice && !b.providerEstimatedPrice && !b.finalAmount && <p>💰 Amount: ₹{b.amount || 0}</p>}
                   <p>🏢 {b.providerName || "Pending Assignment"}</p>
 
                   <button
@@ -150,7 +199,13 @@ useEffect(() => {
                     View Details →
                   </button>
 
-                  {/* ✅ CANCEL BOOKING */}
+                  <button
+                    className="chat-btn"
+                    onClick={() => openChat(b)}
+                  >
+                    💬 Chat
+                  </button>
+
                   {b.status !== "CANCELLED" && b.status !== "COMPLETED" && (
                     <button
                       className="action-btn danger"
@@ -159,7 +214,7 @@ useEffect(() => {
 
                         try {
                           await cancelBooking(b.id);
-                          showNotification("Booking cancelled", "success");
+                          showNotification("Booking cancelled");
                           const res = await getMyBookings();
                           setBookings(res.data);
                         } catch {
@@ -173,23 +228,26 @@ useEffect(() => {
                 </div>
               ))}
             </div>
-</div>
+          </div>
         )}
-{activeTab === "completed" && <CustomerCompleted />}
 
+        {/* COMPLETED */}
+        {activeTab === "completed" && <CustomerCompleted />}
+
+        {/* PROFILE */}
         {activeTab === "profile" && (
-  <CustomerProfile
-    user={user}
-    onUpdateUser={onUpdateUser}
-  />
-)}
+          <CustomerProfile user={user} onUpdateUser={onUpdateUser} />
+        )}
+
+        {/* SUPPORT */}
         {activeTab === "support" && (
           <div className="tab-content support-tab">
-            <div className="ticket-header-row">
-              <button className="create-ticket-btn" onClick={() => setShowCreateTicket(true)}>
-                + Create New Ticket
-              </button>
-            </div>
+            <button
+              className="create-ticket-btn"
+              onClick={() => setShowCreateTicket(true)}
+            >
+              + Create New Ticket
+            </button>
 
             {tickets.length === 0 && (
               <p className="empty-text">No support tickets yet</p>
@@ -198,13 +256,12 @@ useEffect(() => {
             {tickets.map(t => (
               <div key={t.id} className="support-ticket">
                 <h3>{t.subject}</h3>
-                <p>{t.createdAt?.slice(0,10)}</p>
+                <p>{t.createdAt?.slice(0, 10)}</p>
                 <button className="action-btn" onClick={() => setSelectedTicket(t)}>
                   View Ticket
                 </button>
               </div>
             ))}
-
           </div>
         )}
       </div>
@@ -218,8 +275,10 @@ useEffect(() => {
           }}
           onSubmit={handleBookingSubmit}
           defaultService={preselectedService}
+          providerLocation={PROVIDER_LOCATION}   // ✅ ADD THIS
         />
       )}
+
 
       {selectedBooking && (
         <BookingDetailsModal
@@ -227,23 +286,37 @@ useEffect(() => {
           onClose={() => setSelectedBooking(null)}
         />
       )}
-      {showCreateTicket && (
-  <CreateTicketModal
-    onClose={() => setShowCreateTicket(false)}
-    onCreated={fetchTickets}
-  />
 
-)}
-{selectedTicket && (
-  <ViewTicketModal
-    ticket={selectedTicket}
-    onClose={() => setSelectedTicket(null)}
-  />
-)}
+      {showCreateTicket && (
+        <CreateTicketModal
+          onClose={() => setShowCreateTicket(false)}
+          onCreated={fetchTickets}
+        />
+      )}
+
+      {selectedTicket && (
+        <ViewTicketModal
+          ticket={selectedTicket}
+          onClose={() => setSelectedTicket(null)}
+        />
+      )}
+
+      {showChat && chatBooking && (
+        <Chat
+          bookingId={chatBooking.id}
+          userId={user.userId}
+          userName={user.fullName}
+          booking={chatBooking}
+          isOpen={showChat}
+          onClose={closeChat}
+        />
+      )}
     </div>
   );
 }
-/* BOOKING DETAILS MODAL */
+
+/* ------------------ MODALS ------------------ */
+
 function BookingDetailsModal({ booking, onClose }) {
   return (
     <div className="modal-overlay">
@@ -269,9 +342,43 @@ function BookingDetailsModal({ booking, onClose }) {
           <div className="details-row"><span>Date & Time</span><strong>{booking.bookingDateTime || "Not Selected"}</strong></div>
           <div className="details-row"><span>Provider</span><strong>{booking.providerName || "Pending Assignment"}</strong></div>
           <div className="details-row"><span>Address</span><strong>{booking.address}</strong></div>
-          <div className="details-row"><span>Description</span><strong>{booking.description}</strong></div>
+
+        {booking.customerLatitude &&
+         booking.customerLongitude && (
+
+
+          <div style={{ marginTop: "16px" }}>
+            <h3>Route to Provider</h3>
+
+            <MapComponent
+              route={true}
+              locations={[
+                {
+                  id: "customer",
+                  name: "Your Location",
+                  latitude: booking.customerLatitude,
+                  longitude: booking.customerLongitude
+                },
+
+                  {
+                    id: "provider",
+                    name: booking.providerName || PROVIDER_LOCATION.name,
+                    latitude: booking.providerLatitude ?? PROVIDER_LOCATION.latitude,
+                    longitude: booking.providerLongitude ?? PROVIDER_LOCATION.longitude
+                  }
+
+              ]}
+              height="300px"
+            />
+
+          </div>
+        )}
+<div className="details-row"><span>Description</span><strong>{booking.description}</strong></div>
           <div className="details-row"><span>Phone</span><strong>{booking.phone}</strong></div>
-          <div className="details-row"><span>Amount</span><strong>₹{booking.amount || 0}</strong></div>
+          {booking.customerEstimatedPrice && <div className="details-row"><span>Your Estimate</span><strong>₹{booking.customerEstimatedPrice}</strong></div>}
+          {booking.providerEstimatedPrice && <div className="details-row"><span>Provider Estimate</span><strong>₹{booking.providerEstimatedPrice}</strong></div>}
+          {booking.finalAmount && <div className="details-row"><span>Final Amount</span><strong>₹{booking.finalAmount}</strong></div>}
+          {!booking.customerEstimatedPrice && !booking.providerEstimatedPrice && !booking.finalAmount && <div className="details-row"><span>Amount</span><strong>₹{booking.amount || 0}</strong></div>}
         </div>
 
         <div className="details-footer">
@@ -281,6 +388,7 @@ function BookingDetailsModal({ booking, onClose }) {
     </div>
   );
 }
+
 function CreateTicketModal({ onClose , onCreated}) {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
@@ -302,7 +410,7 @@ function CreateTicketModal({ onClose , onCreated}) {
         onCreated();     // 🔥 refresh list
         onClose();
       }
-    } catch (e) {
+    } catch  {
       alert("Failed to create ticket");
     } finally {
       setSubmitting(false);

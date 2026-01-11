@@ -1,36 +1,36 @@
-import { useEffect, useState } from "react";
-import ProviderOverview from "./provider/ProviderOverview";
-import ProviderRequests from "./provider/ProviderRequests";
-import ProviderEarnings from "./provider/ProviderEarnings";
+import { useEffect, useRef, useState } from "react";
+import {
+  getProviderCompleted,
+  getProviderEarnings,
+  getProviderRequests,
+} from "../services/api";
+import Chat from "./Chat";
 import ProviderCalendar from "./provider/ProviderCalendar";
 import ProviderCompleted from "./provider/ProviderCompleted";
+import ProviderEarnings from "./provider/ProviderEarnings";
+import ProviderOverview from "./provider/ProviderOverview";
 import ProviderProfile from "./provider/ProviderProfile";
-import {
-  getProviderRequests,
-  getProviderEarnings,
-  getProviderCompleted,
-  acceptRequest,
-  declineRequest,
-  completeRequest,
-  updateProviderProfile,
-} from "../services/api";
+import ProviderRequests from "./provider/ProviderRequests";
 
+import MapComponent from "../components/Map/MapComponent";
 import "../styles/dashboard.common.css";
 import "../styles/provider-dashboard.css";
+
 export default function ProviderDashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState("overview");
-  const [isEditing, setIsEditing] = useState(false);
   const [earnings, setEarnings] = useState(null);
   const [completed, setCompleted] = useState([]);
-  const [editData, setEditData] = useState({
-  fullName: user.fullName,
-  email: user.email,
-  category: user.category,
-  customService: user.customService,
-  experience: user.experience || "",
-  phone: user.phone || ""
-});
+  const [requests, setRequests] = useState([]);
+const [selectedRequest, setSelectedRequest] = useState(null);
+const [chatBooking, setChatBooking] = useState(null);
+const [showChat, setShowChat] = useState(false);
+// 🔴 FIXED PROVIDER LOCATION (constant)
 
+
+const PROVIDER_LOCATION = {
+  latitude: 13.6833,
+  longitude: 79.3476
+};
 
   const [stats, setStats] = useState({
     totalEarnings: 0,
@@ -38,230 +38,243 @@ export default function ProviderDashboard({ user, onLogout }) {
     pending: 0,
     rating: 4.8,
   });
-  const [requests, setRequests] = useState([]);
 
   /* ---------------- LOAD DATA ---------------- */
 
+  
+
   useEffect(() => {
-    loadOverview();
-  }, []);
+    if (activeTab === "earnings") {
+      getProviderEarnings().then(res => setEarnings(res.data));
+    }
+  }, [activeTab]);
+
   useEffect(() => {
-  if (activeTab === "earnings") {
-    getProviderEarnings().then(res => setEarnings(res.data));
-  }
-}, [activeTab]);
+    if (activeTab === "completed") {
+      getProviderCompleted().then(res => setCompleted(res.data));
+    }
+  }, [activeTab]);
 useEffect(() => {
-  if (activeTab === "completed") {
-    getProviderCompleted().then(res => setCompleted(res.data));
+  if (activeTab !== "requests") {
+    const timer = setTimeout(() => setSelectedRequest(null), 0);
+    return () => clearTimeout(timer);
   }
 }, [activeTab]);
 
 
-const handleUserUpdate = async () => {
-  try {
-    const res = await updateProviderProfile(editData);
-
-    // Update UI immediately
-    Object.assign(user, res.data);
-
-    setIsEditing(false);
-    alert("Profile updated successfully");
-
-  } catch (err) {
-    console.error(err);
-    alert("Failed to update profile");
-  }
-};
-const getCalendarEvents = () => {
-  return requests
-    .filter(
-      r =>
-        r.bookingDateTime &&
-        (r.status === "ACCEPTED" || r.status === "COMPLETED")
-    )
-    .map(r => {
-      const [date, time] = r.bookingDateTime.split(" ");
-      return {
-        id: r.id,
-        date,
-        time,
-        service: r.serviceType,
-        amount: r.amount,
-        status: r.status,
-      };
-    });
-};
-
-
-  const loadOverview = async () => {
-    const res = await getProviderRequests();
-    const data = res.data || [];
-
-    const completed = data.filter(r => r.status === "COMPLETED");
-    const accepted = data.filter(r => r.status === "ACCEPTED");
-    const pending = data.filter(r => r.status === "REQUESTED");
-    const totalEarnings = completed.reduce(
-      (sum, r) => sum + (r.amount || 0),
-      0
+useEffect(() => {
+  if (selectedRequest) {
+    console.log(
+      "MAP PROPS",
+      user.latitude,
+      user.longitude,
+      selectedRequest.customerLatitude,
+      selectedRequest.customerLongitude
     );
+  }
+}, [selectedRequest, user.latitude, user.longitude]);
 
-    setStats({
-      totalEarnings,
-      upcoming: accepted.length,
-      pending: pending.length,
-      rating: 4.8,
-    });
-
-    setRequests(data);
+  const openChat = (booking) => {
+    setChatBooking(booking);
+    setShowChat(true);
   };
 
+  const closeChat = () => {
+    setShowChat(false);
+    setChatBooking(null);
+  };
+
+  const hasLoaded = useRef(false);
+
+const fetchOverview = async () => {
+    try {
+      const res = await getProviderRequests();
+      const rawData = res.data || [];
+
+      const data = Array.from(
+      new Map(rawData.map(item => [item.id, item])).values()
+    );
+
+      const completedJobs = data.filter(r => r.status === "COMPLETED");
+      const accepted = data.filter(r => r.status === "ACCEPTED");
+      const pending = data.filter(r => r.status === "REQUESTED");
+
+      const totalEarnings = completedJobs.reduce(
+        (sum, r) => sum + (r.finalAmount || r.amount || 0),
+        0
+      );
+
+      setStats({
+        totalEarnings,
+        upcoming: accepted.length,
+        pending: pending.length,
+        rating: 4.8,
+      });
+
+      setRequests(data);
+    } catch (err) {
+      console.error("Failed to load overview:", err);
+    }
+  };
+
+  /* ---------------- INITIAL LOAD ---------------- */
+
+  useEffect(() => {
+
+    if (hasLoaded.current) return;
+    hasLoaded.current = true;
+    fetchOverview();
+
+    getProviderEarnings()
+      .then(res => setEarnings(res.data))
+      .catch(err => console.error("Failed to load earnings:", err));
+  }, []);
+
+    
+    
+
+  /* ---------------- MAP DATA ---------------- */
+
+  // const customerLocations = requests
+  //   .filter(r => r.customerLatitude && r.customerLongitude)
+  //   .map(r => ({
+  //     id: r.id,
+  //     name: "Customer",
+  //     latitude: r.customerLatitude,
+  //     longitude: r.customerLongitude,
+  //   }));
 
   /* ---------------- UI ---------------- */
 
   return (
     <div className="dashboard-wrapper">
 
-      {/* ===== TOP HEADER ===== */}
-      {/* ===== TOP DASHBOARD HEADER ===== */}
-<header className="provider-header">
+      {/* ===== HEADER ===== */}
+      <header className="provider-header">
 
-  {/* LEFT: PROVIDER INFO */}
-  <div className="provider-header-left">
-  <div className="provider-avatar">🏢</div>
+        <div className="provider-header-left">
+          <div className="provider-avatar">🏢</div>
+          <div className="provider-text">
+            <div className="provider-name">{user.fullName}</div>
+            <div className="provider-role">Service Provider</div>
+            <div className="provider-email">{user.email}</div>
+            <div className="provider-service">
+              {user.customService || user.category}
+            </div>
+          </div>
+        </div>
 
-  <div className="provider-text">
-    {/* NAME */}
-    <div className="provider-name">
-      {user.fullName}
-    </div>
+        <nav className="provider-header-tabs">
+          {[
+            ["overview", "Overview"],
+            ["requests", "Service Requests"],
+            ["earnings", "Earnings"],
+            ["calendar", "Calendar"],
+            ["completed", "Completed Services"],
+            ["profile", "Profile & Settings"],
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              className={`tab-btn ${activeTab === key ? "active" : ""}`}
+              onClick={() => setActiveTab(key)}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
 
-    {/* ROLE */}
-    <div className="provider-role">
-      Service Provider
-    </div>
-
-    {/* EMAIL */}
-    <div className="provider-email">
-      {user.email}
-    </div>
-
-    {/* SERVICE CATEGORY */}
-    <div className="provider-service">
-      {user.customService || user.category}
-    </div>
-  </div>
-</div>
-
-
-
-  {/* CENTER: TABS */}
-  <nav className="provider-header-tabs">
-    {[
-      ["overview", "Overview"],
-      ["requests", "Service Requests"],
-      ["earnings", "Earnings"],
-      ["calendar", "Calendar"],
-      ["completed", "Completed Services"],
-      ["profile", "Profile & Settings"],
-    ].map(([key, label]) => (
-      <button
-        key={key}
-        className={`tab-btn ${activeTab === key ? "active" : ""}`}
-        onClick={() => setActiveTab(key)}
-      >
-        {label}
-      </button>
-    ))}
-  </nav>
-
-  {/* RIGHT: LOGOUT */}
-  <button className="logout-btn" onClick={onLogout}>
-    Logout
-  </button>
-
-</header>
-
+        <button className="logout-btn" onClick={onLogout}>
+          Logout
+        </button>
+      </header>
 
       {/* ===== MAIN CONTENT ===== */}
       <main className="dashboard-main">
 
+        {activeTab === "overview" && (
+          <ProviderOverview
+            stats={stats}
+            requests={requests}
+            user={user}
+          />
+        )}
 
-        {/* ===== STATS ===== */}
-        {/* ===== OVERVIEW TAB ===== */}
-{/* ================= TAB CONTENT ================= */}
+        {activeTab === "requests" && (
+          <>
+            <ProviderRequests
+              requests={requests}
+              onRefresh={fetchOverview}
+              onSelect={setSelectedRequest}
+              onChat={openChat}
+            />
 
-{activeTab === "overview" && (
-  <ProviderOverview
-    stats={stats}
-    requests={requests}
-    user={user}
-  />
-)}
-{/* ================= EARNINGS (OVERVIEW) ================= */}
-{activeTab === "overview" && earnings && (
-  <div className="dashboard-card">
-    <h3 className="card-title">Earnings</h3>
-
-    <div className="earnings-grid">
-      <div className="earn-item">
-        <span className="earn-label">Total Earnings</span>
-        <strong className="earn-value">₹{earnings.total}</strong>
-      </div>
-
-      <div className="earn-item">
-        <span className="earn-label">Pending Amount</span>
-        <strong className="earn-value">₹{earnings.pending}</strong>
-      </div>
-
-      <div className="earn-item">
-        <span className="earn-label">Average / Job</span>
-        <strong className="earn-value">₹{earnings.avg}</strong>
-      </div>
-
-      <div className="earn-item">
-        <span className="earn-label">Completed Jobs</span>
-        <strong className="earn-value">
-          {earnings.completedCount}
-        </strong>
-      </div>
-    </div>
-  </div>
-)}
-
-{activeTab === "requests" && (
-  <ProviderRequests
-    requests={requests}
-    onRefresh={loadOverview}
-  />
-)}
-
-{activeTab === "earnings" && (
-  <ProviderEarnings earnings={earnings} />
-)}
+            {selectedRequest &&
+            selectedRequest.status === "ACCEPTED" &&
+            selectedRequest.customerLatitude != null &&
+            selectedRequest.customerLongitude != null && (
 
 
-{/* ================= CALENDAR TAB ================= */}
-{activeTab === "calendar" && (
-  <ProviderCalendar requests={requests} />
-)}
+              <div className="dashboard-card">
+
+                <MapComponent
+                  route
+                  locations={[
+                    {
+                      id: "provider",
+                      name: "Provider",
+                      latitude: PROVIDER_LOCATION.latitude,
+                      longitude: PROVIDER_LOCATION.longitude
+                    },
+                    {
+                      id: "customer",
+                      name: "Customer",
+                      latitude: selectedRequest.customerLatitude,
+                      longitude: selectedRequest.customerLongitude
+                    }
+                  ]}
+                  height="350px"
+                />
 
 
-{activeTab === "completed" && (
-  <ProviderCompleted completed={completed} />
-)}
-{activeTab === "profile" && (
-  <ProviderProfile
-    user={user}
-    onUserUpdate={(updatedUser) => Object.assign(user, updatedUser)}
-  />
-)}
+              </div>
+            )}
+
+          </>
+        )}
+
+        {activeTab === "earnings" && (
+          <ProviderEarnings earnings={earnings} />
+        )}
+
+        {activeTab === "calendar" && (
+          <ProviderCalendar requests={requests} />
+        )}
+
+        {activeTab === "completed" && (
+          <ProviderCompleted completed={completed} />
+        )}
+
+        {activeTab === "profile" && (
+          <ProviderProfile
+            user={user}
+            onUserUpdate={() => {}}
+          />
+        )}
+
+        {showChat && chatBooking && (
+          <Chat
+            bookingId={chatBooking.id}
+            userId={user.userId}
+            userName={user.fullName}
+            booking={chatBooking}
+            isOpen={showChat}
+            onClose={closeChat}
+          />
+        )}
       </main>
     </div>
   );
 }
-
-/* ===== SMALL COMPONENT ===== */
-
 function Stat({ label, value, icon, highlight }) {
   return (
     <div className={`stat-card ${highlight ? "highlight" : ""}`}>

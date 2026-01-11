@@ -4,7 +4,8 @@ import {
   completeRequest
 } from "../../services/api";
 
-export default function ProviderRequests({ requests, onRefresh }) {
+export default function ProviderRequests({ requests, onRefresh, onSelect, onChat }) {
+
 
   const statusColor = (status) => {
     switch (status) {
@@ -17,7 +18,9 @@ export default function ProviderRequests({ requests, onRefresh }) {
   };
 
   const handleAccept = async (id) => {
-    await acceptRequest(id);
+    const providerEstimatedPrice = prompt("Enter your estimated price (₹) - optional:");
+    const price = providerEstimatedPrice ? parseFloat(providerEstimatedPrice) : null;
+    await acceptRequest(id, price);
     onRefresh();
   };
 
@@ -27,7 +30,12 @@ export default function ProviderRequests({ requests, onRefresh }) {
   };
 
   const handleComplete = async (id) => {
-    await completeRequest(id);
+    const finalAmount = prompt("Enter the final amount (₹) - required:");
+    if (!finalAmount || isNaN(parseFloat(finalAmount))) {
+      alert("Please enter a valid final amount.");
+      return;
+    }
+    await completeRequest(id, parseFloat(finalAmount));
     onRefresh();
   };
 
@@ -39,8 +47,12 @@ export default function ProviderRequests({ requests, onRefresh }) {
         <p>No service requests available.</p>
       ) : (
         <div className="requests-list">
-          {requests.map(req => (
-            <div key={req.id} className="request-card">
+            {requests.map(req => (
+              <div
+                key={req.id}
+                className="request-card"
+                onClick={() => onSelect(req)}
+              >
 
               {/* HEADER */}
               <div className="request-header">
@@ -56,22 +68,34 @@ export default function ProviderRequests({ requests, onRefresh }) {
               {/* DETAILS */}
               <p>📍 {req.address}</p>
               <p>📅 {req.bookingDateTime}</p>
-              <p>💰 ₹{req.amount}</p>
+              {req.description && <p>📝 {req.description}</p>}
+              {req.customerEstimatedPrice && <p>💰 Customer Estimate: ₹{req.customerEstimatedPrice}</p>}
+              {req.providerEstimatedPrice && <p>💰 Your Estimate: ₹{req.providerEstimatedPrice}</p>}
+              {req.finalAmount && <p>💰 Final Amount: ₹{req.finalAmount}</p>}
+              {!req.customerEstimatedPrice && !req.providerEstimatedPrice && !req.finalAmount && <p>💰 Amount: ₹{req.amount || 0}</p>}
 
               {/* ACTIONS */}
               {req.status === "REQUESTED" && (
                 <div className="request-actions">
                   <button
                     className="action-btn primary"
-                    onClick={() => handleAccept(req.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAccept(req.id);
+                    }}
                   >
+
                     Accept
                   </button>
 
                   <button
                     className="action-btn danger"
-                    onClick={() => handleDecline(req.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDecline(req.id);
+                    }}
                   >
+
                     Decline
                   </button>
                 </div>
@@ -79,10 +103,25 @@ export default function ProviderRequests({ requests, onRefresh }) {
 
               {req.status === "ACCEPTED" && (
                 <button
-                  className="action-btn primary"
-                  onClick={() => handleComplete(req.id)}
-                >
+                   className="action-btn primary"
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     handleComplete(req.id);
+                   }}
+                 >
                   Mark Completed
+                </button>
+              )}
+
+              {req.status === "ACCEPTED" && (
+                <button
+                  className="chat-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChat(req);
+                  }}
+                >
+                  💬 Chat
                 </button>
               )}
 

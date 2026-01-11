@@ -8,12 +8,11 @@ import org.springframework.web.servlet.config.annotation.*;
 public class WebConfig implements WebMvcConfigurer {
 
     private final SessionInterceptor sessionInterceptor;
-    private final String frontendOrigin;
+    
 
     public WebConfig(SessionInterceptor sessionInterceptor,
                      @Value("${app.frontend.origin:http://localhost:5173}") String frontendOrigin) {
         this.sessionInterceptor = sessionInterceptor;
-        this.frontendOrigin = frontendOrigin;
     }
 
     @Override

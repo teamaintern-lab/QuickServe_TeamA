@@ -11,7 +11,12 @@ public class BookingRequest {
     private Long providerId;        // maps to service_id column
     private String providerName;
     private String phone;
-    private Double amount;
+    private Double customerEstimatedPrice;
+    private Double customerLatitude;
+    private Double customerLongitude;
+    private Double providerLatitude;
+    private Double providerLongitude;
+
 
     public BookingRequest() {}
 
@@ -33,11 +38,44 @@ public class BookingRequest {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    public Double getCustomerEstimatedPrice() { return customerEstimatedPrice; }
+    public void setCustomerEstimatedPrice(Double customerEstimatedPrice) { this.customerEstimatedPrice = customerEstimatedPrice; }
      public Long getProviderId() { return providerId; }
     public void setProviderId(Long providerId) { this.providerId = providerId; }
 
     public String getProviderName() { return providerName; }
     public void setProviderName(String providerName) { this.providerName = providerName; }
+
+    public Double getCustomerLatitude() {
+        return customerLatitude;
+    }
+
+    public void setCustomerLatitude(Double customerLatitude) {
+        this.customerLatitude = customerLatitude;
+    }
+
+    public Double getCustomerLongitude() {
+        return customerLongitude;
+    }
+
+    public void setCustomerLongitude(Double customerLongitude) {
+        this.customerLongitude = customerLongitude;
+    }
+
+    public Double getProviderLatitude() {
+        return providerLatitude;
+    }
+
+    public void setProviderLatitude(Double providerLatitude) {
+        this.providerLatitude = providerLatitude;
+    }
+
+    public Double getProviderLongitude() {
+        return providerLongitude;
+    }
+
+    public void setProviderLongitude(Double providerLongitude) {
+        this.providerLongitude = providerLongitude;
+    }
+
 }

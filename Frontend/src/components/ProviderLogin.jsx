@@ -16,54 +16,70 @@ export default function ProviderLogin({ onBack, onLoginSuccess }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      alert("Please enter both email and password.");
-      return;
+  if (!formData.email || !formData.password) {
+    alert("Please enter both email and password.");
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      try {
+        const payload = {
+          email: formData.email,
+          password: formData.password,
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude
+        };
+
+        const res = await login(payload);
+
+        if (!res.data.success) {
+          alert("Invalid email or password.");
+          return;
+        }
+
+        if (res.data.role !== "PROVIDER") {
+          alert("This account is not a provider account.");
+          return;
+        }
+
+        // STORE PROVIDER SESSION
+        const provider = {
+          userId: res.data.userId,
+          fullName: res.data.fullName,
+          email: res.data.email,
+          role: res.data.role,
+          category: res.data.category,
+          customService: res.data.customService,
+          latitude: res.data.latitude,
+          longitude: res.data.longitude
+        };
+
+        setCurrentUser(provider);
+
+        if (onLoginSuccess) {
+          onLoginSuccess(provider);
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Login failed. Please try again.");
+      }
+    },
+    () => {
+      alert("Location permission is required for providers.");
     }
-
-    try {
-      const res = await login({
-        email: formData.email,
-        password: formData.password
-      });
-
-      if (!res.data.success) {
-        alert("Invalid email or password.");
-        return;
-      }
-
-      if (res.data.role !== "PROVIDER") {
-        alert("This account is not a provider account.");
-        return;
-      }
-
-      // STORE USER SESSION
-      // STORE USER SESSION (FIXED: include email & service)
-const provider = {
-  userId: res.data.userId,
-  fullName: res.data.fullName,
-  email: res.data.email,
-  role: res.data.role,
-  category: res.data.category,
-  customService: res.data.customService
+  );
 };
 
-setCurrentUser(provider);
-
-// INFORM PARENT TO NAVIGATE TO DASHBOARD
-if (onLoginSuccess) {
-  onLoginSuccess(provider);
-}
-
-
-    } catch (err) {
-      console.error(err);
-      alert("Login failed. Please try again.");
-    }
-  };
 const handleForgotPassword = () => {
   if (!formData.email) {
     alert("Please enter your registered email first.");

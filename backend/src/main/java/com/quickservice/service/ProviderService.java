@@ -14,11 +14,14 @@ public class ProviderService {
 
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public ProviderService(BookingRepository bookingRepository,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           EmailService emailService) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     // =========================
@@ -28,30 +31,137 @@ public class ProviderService {
     // Fetch all bookings matching provider category
     public List<Booking> getProviderRequests(Long providerId) {
         User provider = getProvider(providerId);
-        return bookingRepository.findByServiceType(provider.getCategory());
+
+        // 1️⃣ Unassigned requests (category match)
+        List<Booking> requested = bookingRepository
+                .findByServiceTypeAndStatus(
+                        provider.getCategory(),
+                        "REQUESTED"
+                );
+
+        // 2️⃣ Assigned to this provider (ACCEPTED + COMPLETED)
+        List<Booking> assigned = bookingRepository
+                .findByServiceId(providerId);
+
+        // 3️⃣ Merge both
+        requested.addAll(assigned);
+
+        return requested;
     }
 
-    public Booking acceptRequest(Long bookingId, Long providerId) {
+
+    public Booking acceptRequest(Long bookingId, Long providerId, Double providerEstimatedPrice) {
         Booking b = getBooking(bookingId);
 
         // assign provider on accept
         b.setServiceId(providerId);
         b.setProviderName(getProviderName(providerId));
+        b.setProviderEstimatedPrice(providerEstimatedPrice);
         b.setStatus("ACCEPTED");
 
-        return bookingRepository.save(b);
+        Booking acceptedBooking = bookingRepository.save(b);
+
+        // Send notification email to customer
+        try {
+            User customer = userRepository.findById(acceptedBooking.getUserId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + acceptedBooking.getBookingDateTime() +
+                                  "\nAddress: " + acceptedBooking.getAddress() +
+                                  "\nDescription: " + acceptedBooking.getDescription();
+            
+            if (acceptedBooking.getCustomerEstimatedPrice() != null) {
+                bookingDetails += "\nCustomer Estimated Price: ₹" + acceptedBooking.getCustomerEstimatedPrice();
+            }
+            if (acceptedBooking.getProviderEstimatedPrice() != null) {
+                bookingDetails += "\nProvider Estimated Price: ₹" + acceptedBooking.getProviderEstimatedPrice();
+            }
+
+            emailService.sendProviderResponseNotification(
+                customer.getEmail(),
+                provider.getFullName(),
+                acceptedBooking.getServiceType(),
+                bookingDetails,
+                true // isAccepted
+            );
+        } catch (Exception e) {
+            // Log the error but don't fail the acceptance
+            System.err.println("Failed to send acceptance notification email: " + e.getMessage());
+        }
+
+        return acceptedBooking;
     }
 
     public Booking declineRequest(Long bookingId, Long providerId) {
         Booking b = getOwnedBooking(bookingId, providerId);
         b.setStatus("DECLINED");
-        return bookingRepository.save(b);
+
+        Booking declinedBooking = bookingRepository.save(b);
+
+        // Send notification email to customer
+        try {
+            User customer = userRepository.findById(declinedBooking.getUserId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + declinedBooking.getBookingDateTime() +
+                                  "\nAddress: " + declinedBooking.getAddress() +
+                                  "\nDescription: " + declinedBooking.getDescription() +
+                                  "\nAmount: ₹" + declinedBooking.getAmount();
+
+            emailService.sendProviderResponseNotification(
+                customer.getEmail(),
+                provider.getFullName(),
+                declinedBooking.getServiceType(),
+                bookingDetails,
+                false // isAccepted = false (declined)
+            );
+        } catch (Exception e) {
+            // Log the error but don't fail the decline
+            System.err.println("Failed to send decline notification email: " + e.getMessage());
+        }
+
+        return declinedBooking;
     }
 
-    public Booking completeRequest(Long bookingId, Long providerId) {
+    public Booking completeRequest(Long bookingId, Long providerId, Double finalAmount) {
         Booking b = getOwnedBooking(bookingId, providerId);
+        b.setFinalAmount(finalAmount);
         b.setStatus("COMPLETED");
-        return bookingRepository.save(b);
+
+        Booking completedBooking = bookingRepository.save(b);
+
+        // Send completion notification email to customer
+        try {
+            User customer = userRepository.findById(completedBooking.getUserId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+            User provider = userRepository.findById(providerId)
+                .orElseThrow(() -> new RuntimeException("Provider not found"));
+
+            String bookingDetails = "Date: " + completedBooking.getBookingDateTime() +
+                                  "\nAddress: " + completedBooking.getAddress() +
+                                  "\nDescription: " + completedBooking.getDescription();
+            
+            if (completedBooking.getCustomerEstimatedPrice() != null) {
+                bookingDetails += "\nCustomer Estimated Price: ₹" + completedBooking.getCustomerEstimatedPrice();
+            }
+            if (completedBooking.getProviderEstimatedPrice() != null) {
+                bookingDetails += "\nProvider Estimated Price: ₹" + completedBooking.getProviderEstimatedPrice();
+            }
+            if (completedBooking.getFinalAmount() != null) {
+                bookingDetails += "\nFinal Amount: ₹" + completedBooking.getFinalAmount();
+            }
+
+            emailService.sendCompletionNotification(customer.getEmail(), provider.getFullName(), completedBooking.getServiceType(), bookingDetails);
+        } catch (Exception e) {
+            // Log the error but don't fail the completion
+            System.err.println("Failed to send completion notification email: " + e.getMessage());
+        }
+
+        return completedBooking;
     }
 
     // =========================
