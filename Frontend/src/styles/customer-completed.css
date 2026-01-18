@@ -52,6 +52,7 @@
   );
   opacity: 0;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .completed-card:hover {
@@ -141,26 +142,29 @@
    =============================== */
 .star-row {
   display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .star-btn {
-  background: transparent;
+  background: none;
   border: none;
-  font-size: 1.5rem;
   cursor: pointer;
-  color: #cbd5f5;
-  transition: transform 0.15s ease, color 0.15s ease;
-}
-
-.star-btn:hover {
-  transform: scale(1.15);
+  font-size: 2.5rem;
+  color: #94a3b8;        /* visible grey */
+  padding: 0;
+  line-height: 1;
 }
 
 .star-btn.filled {
-  color: #2563eb;
+  color: #facc15;        /* gold */
 }
+
+.star-btn:hover {
+  transform: scale(1.2);
+  color: #fbbf24;
+}
+
 
 /* ===============================
    TEXTAREA

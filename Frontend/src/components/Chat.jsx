@@ -111,17 +111,29 @@ export default function Chat({ bookingId, userId, userName, booking, isOpen, onC
             messages.map((msg) => {
               // Determine message alignment
               let messageClass;
+<<<<<<< HEAD
+=======
+              let timeClass;
+>>>>>>> 6fafcb9 (updated project code)
               if (isCustomer) {
                 // For customer: own messages right, received left
                 if (String(msg.senderId) === String(userId)) {
                   messageClass = "provider"; // right
+<<<<<<< HEAD
                 } else {
                   messageClass = "customer"; // left
+=======
+                  timeClass = "sent";
+                } else {
+                  messageClass = "customer"; // left
+                  timeClass = "received";
+>>>>>>> 6fafcb9 (updated project code)
                 }
               } else {
                 // For provider: customer messages left, provider messages right
                 if (String(msg.senderId) === String(booking.userId)) {
                   messageClass = "customer"; // left
+<<<<<<< HEAD
                 } else {
                   messageClass = "provider"; // right
                 }
@@ -142,6 +154,21 @@ export default function Chat({ bookingId, userId, userName, booking, isOpen, onC
                 >
                   <div className="message-content">
                     <span className="message-sender">{senderName}</span>
+=======
+                  timeClass = "received";
+                } else {
+                  messageClass = "provider"; // right
+                  timeClass = "sent";
+                }
+              }
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`chat-message ${messageClass} ${timeClass}`}
+                >
+                  <div className="message-content">
+>>>>>>> 6fafcb9 (updated project code)
                     <p>{msg.message}</p>
                     <span className="message-time">
                       {formatTime(msg.sentAt)}

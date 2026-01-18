@@ -15,6 +15,9 @@ public class Booking {
     @Column(name = "user_id", nullable = false)
     private Long userId; // just store the ID, not the user object
 
+    @Column(name = "provider_id", nullable = true)
+    private Long providerId;  // provider ID selected by customer
+
     @Column(nullable = true)
     private Long serviceId; // you are not using ServiceItem now
 
@@ -43,7 +46,17 @@ public class Booking {
 
     private String providerName;
 
-    private Double amount;
+    @Column(name = "customer_estimated_price")
+    private Double customerEstimatedPrice;
+
+    @Column(name = "provider_estimated_price")
+    private Double providerEstimatedPrice;
+
+    @Column(name = "final_amount")
+    private Double finalAmount;
+
+    @Column(nullable = true)
+    private Double amount; // Legacy field for backward compatibility
 
     @Column(name = "created_at", updatable = false)
     private Instant createdAt = Instant.now();
@@ -61,6 +74,11 @@ public class Booking {
 
     @Column(name = "provider_longitude")
     private Double providerLongitude;
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 6fafcb9 (updated project code)
 
     // Getters & Setters
 
@@ -72,9 +90,17 @@ public class Booking {
         this.id = id;
     }
 
+<<<<<<< HEAD
     public Long getUserId() {
         return userId;
     }
+=======
+    public Long getProviderId() { return providerId; }
+    public void setProviderId(Long providerId) { this.providerId = providerId; }
+
+    public Long getServiceId() { return serviceId; }
+    public void setServiceId(Long serviceId) { this.serviceId = serviceId; }
+>>>>>>> 6fafcb9 (updated project code)
 
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -116,6 +142,7 @@ public class Booking {
         return description;
     }
 
+<<<<<<< HEAD
     public void setDescription(String description) {
         this.description = description;
     }
@@ -183,6 +210,19 @@ public class Booking {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
+=======
+    public Double getCustomerEstimatedPrice() { return customerEstimatedPrice; }
+    public void setCustomerEstimatedPrice(Double customerEstimatedPrice) { this.customerEstimatedPrice = customerEstimatedPrice; }
+
+    public Double getProviderEstimatedPrice() { return providerEstimatedPrice; }
+    public void setProviderEstimatedPrice(Double providerEstimatedPrice) { this.providerEstimatedPrice = providerEstimatedPrice; }
+
+    public Double getFinalAmount() { return finalAmount; }
+    public void setFinalAmount(Double finalAmount) { this.finalAmount = finalAmount; }
+
+    public Instant getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+>>>>>>> 6fafcb9 (updated project code)
 
     public Double getCustomerLatitude() {
         return customerLatitude;
@@ -216,6 +256,7 @@ public class Booking {
         this.providerLongitude = providerLongitude;
     }
 
+<<<<<<< HEAD
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -230,4 +271,14 @@ public class Booking {
     public int hashCode() {
         return Objects.hash(id);
     }
+=======
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+>>>>>>> 6fafcb9 (updated project code)
 }

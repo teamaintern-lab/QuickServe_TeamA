@@ -1,6 +1,11 @@
 com\quickservice\model\Ticket.class
 com\quickservice\controller\AuthController.class
 com\quickservice\QuickServiceApplication.class
+<<<<<<< HEAD
+=======
+com\quickservice\service\ChatService.class
+com\quickservice\controller\BookingController.class
+>>>>>>> 6fafcb9 (updated project code)
 com\quickservice\controller\UserController.class
 com\quickservice\dto\AuthRequest.class
 com\quickservice\service\AuthService.class
@@ -24,6 +29,7 @@ com\quickservice\model\ServiceItem.class
 com\quickservice\controller\TicketController.class
 com\quickservice\repository\TicketRepository.class
 com\quickservice\config\WebConfig.class
+com\quickservice\repository\ChatMessageRepository.class
 com\quickservice\exception\GlobalExceptionHandler.class
 com\quickservice\model\User.class
 com\quickservice\service\ProviderService.class

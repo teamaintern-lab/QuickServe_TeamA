@@ -28,6 +28,12 @@ public class ChatService {
         if (senderId.equals(booking.getUserId())) {
             // Sender is customer, receiver is provider
             receiverId = booking.getServiceId();
+<<<<<<< HEAD
+=======
+            if (receiverId == null) {
+                throw new IllegalArgumentException("Cannot send message: No provider assigned to this booking yet");
+            }
+>>>>>>> 6fafcb9 (updated project code)
         } else if (senderId.equals(booking.getServiceId())) {
             // Sender is provider, receiver is customer
             receiverId = booking.getUserId();

@@ -87,6 +87,7 @@ export default function AdminDashboard({ user, onLogout }) {
             alert("Failed to delete service.");
         }
     };
+<<<<<<< HEAD
 return (
   <div className="admin-layout">
 
@@ -104,6 +105,53 @@ return (
         >
           📊 Overview
         </button>
+=======
+    return (
+        <div className="admin-layout">
+
+            {/* TOP NAVBAR */}
+            <header className="admin-navbar">
+                <div className="navbar-left">
+                    <span className="logo-icon">⚡</span>
+                    <span className="navbar-title">Admin Panel</span>
+                </div>
+
+                <nav className="navbar-links">
+                    <button
+                        className={activeTab === "overview" ? "active" : ""}
+                        onClick={() => setActiveTab("overview")}
+                    >
+                        📊 Overview
+                    </button>
+
+                    <button
+                        className={activeTab === "users" ? "active" : ""}
+                        onClick={() => setActiveTab("users")}
+                    >
+                        👥 Users
+                    </button>
+
+                    <button
+                        className={activeTab === "services" ? "active" : ""}
+                        onClick={() => setActiveTab("services")}
+                    >
+                        🛠 Services
+                    </button>
+                </nav>
+
+                <div className="navbar-right">
+                    <span className="admin-name">{user?.fullName}</span>
+                    <button className="logout-btn" onClick={onLogout}>Logout</button>
+                </div>
+            </header>
+
+            {/* MAIN CONTENT */}
+            <main className="admin-content">
+                <header className="main-header">
+                    <h1>Admin Dashboard</h1>
+                    <p>Welcome back, {user?.fullName}</p>
+                </header>
+>>>>>>> 6fafcb9 (updated project code)
 
         <button
           className={activeTab === "users" ? "active" : ""}

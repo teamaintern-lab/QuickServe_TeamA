@@ -22,6 +22,7 @@ export default function App() {
   const openRegister = () => setScreen("register");
 
   useEffect(() => {
+<<<<<<< HEAD
     // Session recovery on mount
     const recoverSession = async () => {
       try {
@@ -37,8 +38,37 @@ export default function App() {
   }, []);
 
   const handleLoginSuccess = (data) => {
+=======
+    const checkSession = async () => {
+      // 1. Check for Session-Sticky Admin in sessionStorage
+      const sessionAdmin = sessionStorage.getItem("sessionAdmin");
+      if (sessionAdmin) {
+        try {
+          const parsedAdmin = JSON.parse(sessionAdmin);
+          setCurrentUser(parsedAdmin);
+          setScreen("adminDashboard");
+          console.log("Session-Sticky Admin restored.");
+          return;
+        } catch (e) {
+          console.error("Error parsing sessionAdmin", e);
+        }
+      }
+>>>>>>> 6fafcb9 (updated project code)
 
-    // FORGOT PASSWORD FLOW
+      // 2. Standard session check (fallback)
+      try {
+        const res = await getSession();
+        if (res.data && res.data.success && res.data.role === "ADMIN") {
+          handleLoginSuccess(res.data);
+        }
+      } catch (err) {
+        console.log("No active admin session.");
+      }
+    };
+    checkSession();
+  }, []);
+
+  const handleLoginSuccess = (data) => {
     if (data?.action === "FORGOT_PASSWORD") {
       setResetEmail(data.email);
       setResetRole(data.role);
@@ -46,7 +76,6 @@ export default function App() {
       return;
     }
 
-    // NORMAL LOGIN FLOW
     const formattedUser = {
       userId: data.userId,
       fullName: data.fullName,
@@ -59,12 +88,14 @@ export default function App() {
 
     setCurrentUser(formattedUser);
 
-    if (formattedUser.role === "CUSTOMER") {
+    if (formattedUser.role === "ADMIN") {
+      // SAVE TO SESSION STORAGE FOR PERSISTENCE
+      sessionStorage.setItem("sessionAdmin", JSON.stringify(formattedUser));
+      setScreen("adminDashboard");
+    } else if (formattedUser.role === "CUSTOMER") {
       setScreen("customerDashboard");
     } else if (formattedUser.role === "PROVIDER") {
       setScreen("providerDashboard");
-    } else if (formattedUser.role === "ADMIN") {
-      setScreen("adminDashboard");
     }
   };
 
@@ -86,7 +117,13 @@ export default function App() {
             onSelectRole={(role) =>
               role === "customer"
                 ? setScreen("customerLogin")
+<<<<<<< HEAD
                 : setScreen("providerLogin")
+=======
+                : role === "provider"
+                  ? setScreen("providerLogin")
+                  : setScreen("adminLogin")
+>>>>>>> 6fafcb9 (updated project code)
             }
             onRegister={() => setScreen("register")}
             onBack={goHome}
@@ -139,12 +176,28 @@ export default function App() {
             setScreen("home");
           }}
         />
+<<<<<<< HEAD
+=======
+      )}
+      {screen === "adminLogin" && (
+        <div className="auth-container">
+          <AdminLogin
+            onLoginSuccess={handleLoginSuccess}
+            onBack={() => setScreen("roleSelector")}
+          />
+        </div>
+>>>>>>> 6fafcb9 (updated project code)
       )}
 
       {screen === "adminDashboard" && (
         <AdminDashboard
           user={currentUser}
-          onLogout={() => {
+          onLogout={async () => {
+            try {
+              await import("./services/api").then(m => m.logout());
+            } catch (e) {
+              console.error("Backend logout failed", e);
+            }
             setCurrentUser(null);
             setScreen("home");
           }}

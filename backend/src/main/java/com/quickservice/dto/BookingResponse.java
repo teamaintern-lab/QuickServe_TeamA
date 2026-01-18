@@ -4,6 +4,7 @@ public class BookingResponse {
 
     private Long id;
     private Long userId;
+    private Long providerId;
     private Long serviceId;
     private String serviceType;
     private String urgency;
@@ -18,6 +19,12 @@ public class BookingResponse {
     private String providerName;
     private String providerEmail;
     private String customerName;
+<<<<<<< HEAD
+=======
+    private Double customerEstimatedPrice;
+    private Double providerEstimatedPrice;
+    private Double finalAmount;
+>>>>>>> 6fafcb9 (updated project code)
     private Double amount;
 
     private Double customerLatitude;
@@ -30,6 +37,9 @@ public class BookingResponse {
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
+
+    public Long getProviderId() { return providerId; }
+    public void setProviderId(Long providerId) { this.providerId = providerId; }
 
     public Long getServiceId() { return serviceId; }
     public void setServiceId(Long serviceId) { this.serviceId = serviceId; }
@@ -70,6 +80,18 @@ public class BookingResponse {
     public String getCustomerName() { return customerName; }
     public void setCustomerName(String customerName) { this.customerName = customerName; }
 
+<<<<<<< HEAD
+=======
+    public Double getCustomerEstimatedPrice() { return customerEstimatedPrice; }
+    public void setCustomerEstimatedPrice(Double customerEstimatedPrice) { this.customerEstimatedPrice = customerEstimatedPrice; }
+
+    public Double getProviderEstimatedPrice() { return providerEstimatedPrice; }
+    public void setProviderEstimatedPrice(Double providerEstimatedPrice) { this.providerEstimatedPrice = providerEstimatedPrice; }
+
+    public Double getFinalAmount() { return finalAmount; }
+    public void setFinalAmount(Double finalAmount) { this.finalAmount = finalAmount; }
+
+>>>>>>> 6fafcb9 (updated project code)
     public Double getAmount() { return amount; }
     public void setAmount(Double amount) { this.amount = amount; }
 

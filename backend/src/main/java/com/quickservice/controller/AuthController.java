@@ -103,6 +103,36 @@ public class AuthController {
 
         return ResponseEntity.ok(resp);
     }
+<<<<<<< HEAD
+=======
+
+    /* ===== ADMIN LOGIN (BACKEND ONLY) ===== */
+    @PostMapping("/admin/login")
+    public ResponseEntity<AuthResponse> adminLogin(
+            @RequestBody AuthRequest req,
+            HttpSession session
+    ) {
+        Optional<User> userOpt =
+                authService.login(req.getEmail(), req.getPassword());
+
+        if (userOpt.isEmpty() || !"ADMIN".equals(userOpt.get().getRole())) {
+            return ResponseEntity.status(401)
+                    .body(new AuthResponse(false, "Invalid admin credentials"));
+        }
+
+        User user = userOpt.get();
+        session.setAttribute("userId", user.getId());
+        session.setAttribute("role", user.getRole());
+
+        AuthResponse resp = new AuthResponse(true, "Admin login successful");
+        resp.setUserId(user.getId());
+        resp.setFullName(user.getFullName());
+        resp.setEmail(user.getEmail());
+        resp.setRole(user.getRole());
+
+        return ResponseEntity.ok(resp);
+    }
+>>>>>>> 6fafcb9 (updated project code)
     /* ===== LOGOUT ===== */
     @PostMapping("/logout")
     public ResponseEntity<AuthResponse> logout(HttpSession session) {

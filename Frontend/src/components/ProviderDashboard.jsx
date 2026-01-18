@@ -88,6 +88,7 @@ useEffect(() => {
     const res = await getProviderRequests();
     const data = res.data || [];
 
+<<<<<<< HEAD
     const completedJobs = data.filter(r => r.status === "COMPLETED");
     const accepted = data.filter(r => r.status === "ACCEPTED");
     const pending = data.filter(r => r.status === "REQUESTED");
@@ -95,17 +96,25 @@ useEffect(() => {
     const totalEarnings = completedJobs.reduce(
       (sum, r) => sum + (r.amount || 0),
       0
+=======
+    const uniqueData = Array.from(
+      new Map(data.map(r => [r.id, r])).values()
+>>>>>>> 6fafcb9 (updated project code)
     );
 
-    setStats({
-      totalEarnings,
-      upcoming: accepted.length,
-      pending: pending.length,
-      rating: 4.8,
-    });
-
-    setRequests(data);
+    setRequests(uniqueData);
   };
+
+  /* ---------------- MAP DATA ---------------- */
+
+  const customerLocations = requests
+    .filter(r => r.customerLatitude && r.customerLongitude)
+    .map(r => ({
+      id: r.id,
+      name: "Customer",
+      latitude: r.customerLatitude,
+      longitude: r.customerLongitude,
+    }));
 
   /* ---------------- MAP DATA ---------------- */
 

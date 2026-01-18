@@ -136,6 +136,7 @@ public class BookingController {
     BookingResponse r = new BookingResponse();
     r.setId(b.getId());
     r.setUserId(b.getUserId());
+    r.setProviderId(b.getProviderId());
     r.setServiceId(b.getServiceId());
     r.setServiceType(b.getServiceType());
     r.setUrgency(b.getUrgency());
@@ -147,6 +148,9 @@ public class BookingController {
     r.setRating(b.getRating());
     r.setReview(b.getReview());
     r.setProviderName(b.getProviderName());
+    r.setCustomerEstimatedPrice(b.getCustomerEstimatedPrice());
+    r.setProviderEstimatedPrice(b.getProviderEstimatedPrice());
+    r.setFinalAmount(b.getFinalAmount());
     r.setAmount(b.getAmount());
        r.setCustomerLatitude(b.getCustomerLatitude());
        r.setCustomerLongitude(b.getCustomerLongitude());
